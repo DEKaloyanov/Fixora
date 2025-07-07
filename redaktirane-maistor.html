@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактиране на профил | Fixora</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header img {
+      height: 40px;
+      cursor: pointer;
+    }
+    nav {
+      margin-left: 30px;
+    }
+    nav a {
+      margin-right: 20px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #ddd;
+      margin: 0 auto 10px;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: left;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      margin-top: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .firm-field {
+      display: none;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      background: #eee;
+    }
+    .phone-group {
+      display: flex;
+      align-items: center;
+    }
+    .phone-group span {
+      padding: 10px;
+      background: #ddd;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      border: 1px solid #ccc;
+      border-right: none;
+    }
+    .phone-group input {
+      flex: 1;
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html"><img src="fixora-logo.png" alt="Fixora"></a>
+    <nav>
+      <a href="spisak-rabotnici.html">Обяви</a>
+      <a href="kalkulator.html">Калкулатор</a>
+      <a href="za-nas.html">За нас</a>
+      <a href="kontakt.html">Запитвания</a>
+      <a href="chat.html">Чат</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Редактирай профила си</h2>
+    
+    <div class="avatar" id="avatarPreview" onclick="document.getElementById('photo').click()"></div>
+    <button type="button" onclick="document.getElementById('photo').click()">Промени снимка</button>
+    <button type="button" onclick="removeImage()">Изтрий снимка</button>
+    
+    <input type="file" id="photo" accept="image/*" style="display:none">
+
+    <form id="editForm">
+      <label for="firstName">Име:</label>
+      <input type="text" id="firstName" required>
+
+      <label for="lastName">Фамилия:</label>
+      <input type="text" id="lastName" required>
+
+      <label for="type">Тип профил:</label>
+      <select id="type" required>
+        <option value="Частно лице">Частно лице</option>
+        <option value="Фирма">Фирма</option>
+      </select>
+
+      <div id="firmContainer" class="firm-field">
+        <label for="firmName">Име на фирмата:</label>
+        <input type="text" id="firmName" required>
+
+        <label for="iban">IBAN:</label>
+        <input type="text" id="iban" required>
+      </div>
+
+      <label for="location">Населено място:</label>
+      <input list="cities" id="location" required>
+      <datalist id="cities">
+        <option value="София"><option value="Пловдив"><option value="Варна">
+        <option value="Бургас"><option value="Русе"><option value="Стара Загора">
+        <option value="Плевен"><option value="Добрич"><option value="Сливен">
+        <option value="Шумен"><option value="Перник"><option value="Ямбол">
+        <option value="Хасково"><option value="Пазарджик"><option value="Благоевград">
+      </datalist>
+
+      <label for="age">Години:</label>
+      <input type="number" id="age" min="16" max="100" required>
+
+      <label for="phone">Телефон:</label>
+      <div class="phone-group">
+        <span>+359</span>
+        <input type="tel" id="phone" pattern="\d{9}" maxlength="9" required>
+      </div>
+
+      <button type="submit">Запази</button>
+    </form>
+  </div>
+
+  <div class="footer">
+    <p>Контакти: info@fixora.bg | +359 888 888 888</p>
+  </div>
+
+  <script>
+    const avatar = document.getElementById("avatarPreview");
+    const photoInput = document.getElementById("photo");
+    const form = document.getElementById("editForm");
+    const typeSelect = document.getElementById("type");
+    const firmContainer = document.getElementById("firmContainer");
+
+    typeSelect.addEventListener("change", () => {
+      firmContainer.style.display = typeSelect.value === "Фирма" ? "block" : "none";
+    });
+
+    const saved = JSON.parse(localStorage.getItem("profileMaistor") || "{}");
+    if (saved.photo) avatar.style.backgroundImage = `url(${saved.photo})`;
+    document.getElementById("firstName").value = saved.firstName || "";
+    document.getElementById("lastName").value = saved.lastName || "";
+    document.getElementById("type").value = saved.type || "Частно лице";
+    document.getElementById("location").value = saved.location || "";
+    document.getElementById("age").value = saved.age || "";
+    document.getElementById("phone").value = saved.phone || "";
+    document.getElementById("firmName").value = saved.firmName || "";
+    document.getElementById("iban").value = saved.iban || "";
+    firmContainer.style.display = saved.type === "Фирма" ? "block" : "none";
+
+    photoInput.addEventListener("change", function() {
+      const reader = new FileReader();
+      reader.onload = () => {
+        avatar.style.backgroundImage = `url(${reader.result})`;
+        avatar.dataset.image = reader.result;
+      };
+      reader.readAsDataURL(photoInput.files[0]);
+    });
+
+    
+    form.addEventListener("submit", function(e) {
+      if (typeSelect.value === "Фирма") {
+        if (!document.getElementById("firmName").value || !document.getElementById("iban").value) {
+          alert("Моля попълнете всички полета за фирма.");
+          return;
+        }
+      }
+    
+      e.preventDefault();
+      const phone = document.getElementById("phone").value;
+      if (!/^\d{9}$/.test(phone)) {
+        alert("Телефонният номер трябва да съдържа точно 9 цифри.");
+        return;
+      }
+      const data = {
+        photo: avatar.dataset.image || saved.photo,
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        type: document.getElementById("type").value,
+        firmName: document.getElementById("firmName").value,
+        iban: document.getElementById("iban").value,
+        location: document.getElementById("location").value,
+        age: document.getElementById("age").value,
+        phone: phone
+      };
+      localStorage.setItem("profileMaistor", JSON.stringify(data));
+      window.location.href = "profil-maistor.html";
+    });
+  
+    function removeImage() {
+      avatar.style.backgroundImage = '';
+      delete avatar.dataset.image;
+    }
+    
+
+</body>
+</html>

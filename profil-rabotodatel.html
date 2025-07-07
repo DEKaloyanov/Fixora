@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Профил на работодател</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #007bff;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Вашият профил</h1>
+    <img id="profileImage" class="profile-img" src="https://via.placeholder.com/150" alt="Снимка"><br>
+
+    <p><strong>Имена:</strong> <span id="fullname">–</span></p>
+    <p><strong>Град:</strong> <span id="city">–</span></p>
+    <p><strong>За мен:</strong></p>
+    <p id="description">–</p>
+
+    <a href="redaktirane-rabotodatel.html" class="btn">Редактиране и добавяне на информация</a>
+    <a href="spisak-rabotnici.html" class="btn">Разгледай списъка с майстори</a>
+
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("rabotodatel_profile"));
+    const image = localStorage.getItem("rabotodatel_image");
+
+    if (data) {
+      document.getElementById("fullname").textContent = data.fullname || '–';
+      document.getElementById("city").textContent = data.city || '–';
+      document.getElementById("description").textContent = data.description || '–';
+    }
+
+    if (image) {
+      document.getElementById("profileImage").src = image;
+    }
+  </script>
+</body>
+</html>

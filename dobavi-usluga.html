@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Добави услуга | Fixora</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Добави своята услуга</h2>
+    <form id="serviceForm">
+      <label for="serviceType">Вид услуга:</label>
+      <select id="serviceType" name="serviceType" required>
+        <option value="" disabled selected>Избери услуга</option>
+        <option value="Кофраж">Кофраж</option>
+        <option value="Зидария">Зидария</option>
+        <option value="Замазка">Замазка</option>
+        <option value="Боядисване">Боядисване</option>
+        <option value="Топлоизолация">Топлоизолация</option>
+        <option value="Плочки/Фаянс">Плочки/Фаянс</option>
+        <option value="Гипсокартон">Гипсокартон</option>
+        <option value="Електричарски услуги">Електричарски услуги</option>
+        <option value="ВИК услуги">ВИК услуги</option>
+        <option value="Друго">Друго</option>
+      </select>
+
+      <label for="area">Избери област:</label>
+      <input list="areas" id="area" name="area" placeholder="Започни да пишеш област..." required>
+      <datalist id="areas">
+        <option value="Всички области">
+        <option value="Благоевград">
+        <option value="Бургас">
+        <option value="Варна">
+        <option value="Велико Търново">
+        <option value="Видин">
+        <option value="Враца">
+        <option value="Габрово">
+        <option value="Добрич">
+        <option value="Кърджали">
+        <option value="Кюстендил">
+        <option value="Ловеч">
+        <option value="Монтана">
+        <option value="Пазарджик">
+        <option value="Перник">
+        <option value="Плевен">
+        <option value="Пловдив">
+        <option value="Разград">
+        <option value="Русе">
+        <option value="Силистра">
+        <option value="Сливен">
+        <option value="Смолян">
+        <option value="София">
+        <option value="София-град">
+        <option value="Стара Загора">
+        <option value="Търговище">
+        <option value="Хасково">
+        <option value="Шумен">
+        <option value="Ямбол">
+      </datalist>
+
+      <label for="teamSize">Брой майстори в бригадата:</label>
+      <input type="number" id="teamSize" name="teamSize" placeholder="напр. 3" required>
+
+      <label for="priceM2">Цена на кв.м:</label>
+      <input type="number" id="priceM2" name="priceM2" placeholder="напр. 40 лв.">
+
+      <label for="priceDay">Цена на надник:</label>
+      <input type="number" id="priceDay" name="priceDay" placeholder="напр. 120 лв.">
+
+      <label for="description">Описание на услугата (по избор):</label>
+      <textarea id="description" name="description" rows="4" placeholder="Кратко описание на предлаганата услуга..."></textarea>
+
+      <button type="submit">Публикувай</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("serviceForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const service = {
+        type: document.getElementById("serviceType").value,
+        area: document.getElementById("area").value,
+        teamSize: document.getElementById("teamSize").value,
+        priceM2: document.getElementById("priceM2").value,
+        priceDay: document.getElementById("priceDay").value,
+        description: document.getElementById("description").value
+      };
+      const existing = JSON.parse(localStorage.getItem("myServices") || "[]");
+      existing.push(service);
+      localStorage.setItem("myServices", JSON.stringify(existing));
+      window.location.href = "profil-maistor.html";
+    });
+  </script>
+</body>
+</html>

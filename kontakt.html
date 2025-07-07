@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Запитвания | Fixora</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    form {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html"><img src="logo.png" alt="Fixora Logo" class="logo-small"></a>
+    <nav>
+      <ul class="navbar">
+        <li><a href="spisak-rabotnici.html">Обяви</a></li>
+        <li><a href="kalkulator.html">Калкулатор</a></li>
+        <li><a href="za-nas.html">За нас</a></li>
+        <li><a href="kontakt.html" class="active">Запитвания</a></li>
+        <li><a href="chat.html">Чат</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="centered">
+    <h1>Изпрати ни запитване</h1>
+    <form id="contactForm">
+      <label for="name">Име:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Имейл:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="message">Съобщение:</label>
+      <textarea id="message" name="message" rows="6" required></textarea>
+
+      <button type="submit">Изпрати</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>Свържи се с нас: support@fixora.bg | +359 888 123 456</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Благодарим Ви! Вашето съобщение беше изпратено.");
+      form.reset();
+    });
+  </script>
+</body>
+</html>

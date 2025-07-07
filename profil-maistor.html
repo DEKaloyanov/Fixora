@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Моят профил | Fixora</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header img {
+      height: 40px;
+      cursor: pointer;
+    }
+    nav {
+      margin-left: 30px;
+    }
+    nav a {
+      margin-right: 20px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .profile-header {
+      text-align: center;
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #ddd;
+      margin: 0 auto 10px;
+      background-size: cover;
+      background-position: center;
+    }
+    .info {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .info p {
+      margin: 10px 0;
+    }
+    .section-toggle {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    .section-toggle button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html"><img src="fixora-logo.png" alt="Fixora"></a>
+    <nav>
+      <a href="spisak-rabotnici.html">Обяви</a>
+      <a href="kalkulator.html">Калкулатор</a>
+      <a href="za-nas.html">За нас</a>
+      <a href="kontakt.html">Запитвания</a>
+      <a href="chat.html">Чат</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="profile-header">
+      <h2>Твоят профил</h2>
+      <div class="avatar" id="profileAvatar"></div>
+    </div>
+
+    <div class="info" id="profileInfo"></div>
+
+    <div class="section-toggle">
+      <button onclick="showSection('active')">Активни обяви</button>
+      <button onclick="showSection('past')">Опит в миналото</button>
+    </div>
+
+    <div id="sectionContent">
+      <p>Изберете секция, която да се покаже тук.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Контакти: info@fixora.bg | +359 888 888 888</p>
+  </div>
+
+  <script>
+    const profile = JSON.parse(localStorage.getItem("profileMaistor") || "{}");
+
+    const avatar = document.getElementById("profileAvatar");
+    if (profile.photo) {
+      avatar.style.backgroundImage = `url(${profile.photo})`;
+    }
+
+    const info = document.getElementById("profileInfo");
+    info.innerHTML = `
+      <p><strong>Име:</strong> ${profile.firstName || ""}</p>
+      <p><strong>Фамилия:</strong> ${profile.lastName || ""}</p>
+      <p><strong>Тип профил:</strong> ${profile.type || ""}</p>
+      ${profile.type === "Фирма" ? `<p><strong>Име на фирмата:</strong> ${profile.firmName || ""}</p>
+      <p><strong>IBAN:</strong> ${profile.iban || ""}</p>` : ""}
+      <p><strong>Населено място:</strong> ${profile.location || ""}</p>
+      <p><strong>Години:</strong> ${profile.age || ""}</p>
+      <p><strong>Телефон:</strong> +359 ${profile.phone || ""}</p>
+    `;
+
+    function showSection(section) {
+      const container = document.getElementById("sectionContent");
+      if (section === "active") {
+        container.innerHTML = "<p>Тук ще се показват активните обяви.</p>";
+      } else {
+        container.innerHTML = "<p>Тук ще се добави информация за опита в миналото.</p>";
+      }
+    }
+  </script>
+
+</body>
+</html>

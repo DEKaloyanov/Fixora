@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактирай услуга | Fixora</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Редактирай своята услуга</h2>
+    <form id="editForm">
+      <label for="serviceType">Вид услуга:</label>
+      <select id="serviceType" required>
+        <option value="Кофраж">Кофраж</option>
+        <option value="Зидария">Зидария</option>
+        <option value="Замазка">Замазка</option>
+        <option value="Боядисване">Боядисване</option>
+        <option value="Топлоизолация">Топлоизолация</option>
+        <option value="Плочки/Фаянс">Плочки/Фаянс</option>
+        <option value="Гипсокартон">Гипсокартон</option>
+        <option value="Електричарски услуги">Електричарски услуги</option>
+        <option value="ВИК услуги">ВИК услуги</option>
+        <option value="Друго">Друго</option>
+      </select>
+
+      <label for="area">Област:</label>
+      <input list="areas" id="area" required>
+      <datalist id="areas">
+        <option value="Благоевград">
+        <option value="Бургас">
+        <option value="Варна">
+        <option value="Велико Търново">
+        <option value="Видин">
+        <option value="Враца">
+        <option value="Габрово">
+        <option value="Добрич">
+        <option value="Кърджали">
+        <option value="Кюстендил">
+        <option value="Ловеч">
+        <option value="Монтана">
+        <option value="Пазарджик">
+        <option value="Перник">
+        <option value="Плевен">
+        <option value="Пловдив">
+        <option value="Разград">
+        <option value="Русе">
+        <option value="Силистра">
+        <option value="Сливен">
+        <option value="Смолян">
+        <option value="София">
+        <option value="София-град">
+        <option value="Стара Загора">
+        <option value="Търговище">
+        <option value="Хасково">
+        <option value="Шумен">
+        <option value="Ямбол">
+      </datalist>
+
+      <label for="teamSize">Брой майстори:</label>
+      <input type="number" id="teamSize" required>
+
+      <label for="priceM2">Цена на кв.м:</label>
+      <input type="number" id="priceM2">
+
+      <label for="priceDay">Цена на надник:</label>
+      <input type="number" id="priceDay">
+
+      <label for="description">Описание:</label>
+      <textarea id="description" rows="4"></textarea>
+
+      <button type="submit">Запази промените</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("editForm");
+    const editData = JSON.parse(localStorage.getItem("editService"));
+    const services = JSON.parse(localStorage.getItem("myServices") || "[]");
+
+    if (editData) {
+      document.getElementById("serviceType").value = editData.type;
+      document.getElementById("area").value = editData.area;
+      document.getElementById("teamSize").value = editData.teamSize;
+      document.getElementById("priceM2").value = editData.priceM2;
+      document.getElementById("priceDay").value = editData.priceDay;
+      document.getElementById("description").value = editData.description;
+    }
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const updated = {
+        type: document.getElementById("serviceType").value,
+        area: document.getElementById("area").value,
+        teamSize: document.getElementById("teamSize").value,
+        priceM2: document.getElementById("priceM2").value,
+        priceDay: document.getElementById("priceDay").value,
+        description: document.getElementById("description").value
+      };
+      if (editData && Number.isInteger(editData.index)) {
+        services[editData.index] = updated;
+        localStorage.setItem("myServices", JSON.stringify(services));
+        localStorage.removeItem("editService");
+        window.location.href = "profil-maistor.html";
+      }
+    });
+  </script>
+
+</body>
+</html>
