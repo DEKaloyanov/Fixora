@@ -1,0 +1,126 @@
+
+header {
+  background-color: #ffffff;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+}
+
+.logo-small {
+  height: 40px;
+  cursor: pointer;
+}
+
+.navbar {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navbar li a:hover {
+  color: #4c97e7;
+}
+
+
+
+
+
+
+
+.edit-profile-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 18px;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.edit-profile-button:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+
+
+
+.job-card {
+  display: flex;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.job-card:hover {
+  transform: scale(1.01);
+}
+
+.job-image img {
+  width: 160px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.job-details {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.job-details h3 {
+  margin-top: 0;
+  color: #002147;
+}
+
+.job-details p {
+  margin: 6px 0;
+}
+
+.edit-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #007BFF;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: #0056b3;
+}
+
+
+
+.job-card {
+  cursor: pointer;
+  position: relative;
+}
+
+.job-card .edit-job-btn a {
+  pointer-events: auto;
+  z-index: 2;
+  position: relative;
+}

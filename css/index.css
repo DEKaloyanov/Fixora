@@ -1,0 +1,200 @@
+/* Хедър и навигация */
+header {
+  background-color: #ffffff;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+}
+
+.logo-small {
+  height: 40px;
+  cursor: pointer;
+}
+
+.navbar {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navbar li a:hover {
+  color: #4c97e7;
+}
+
+
+
+/* Централно съдържание */
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+/* Лого */
+.logoto-large {
+  width: 400px;
+  height: auto;
+}
+
+/* Главни бутони */
+.main-buttons-alt {
+  display: flex;
+  gap: 20px;
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+.main-buttons-alt a {
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.main-buttons-alt a:hover {
+  background-color: #0056b3;
+}
+
+.divider {
+  align-self: center;
+  font-weight: bold;
+  color: #444;
+}
+
+/* Информационна секция */
+.trust-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 40px;
+}
+
+.trust-info .column {
+  width: 48%;
+}
+
+.trust-info h3 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.section-divider {
+  width: 100%;
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+/* Футър */
+footer {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 15px 10px;
+  font-size: 14px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* Toast за вход */
+.login-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px 20px;
+  border-left: 5px solid #28a745;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+/* Модали */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+}
+
+.modal-content form input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.modal-content button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Замъгляване */
+#overlay {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}

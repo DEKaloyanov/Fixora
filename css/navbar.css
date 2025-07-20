@@ -1,0 +1,54 @@
+/* Основен стил за навигационната лента */
+nav {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+/* Лого */
+.logo-small {
+  height: 50px;
+  cursor: pointer;
+}
+
+/* Навигационни бутони */
+.navbar {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Всеки елемент от менюто */
+.navbar li a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #333;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* При задържане с мишката */
+.navbar li a:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Стил за бутони Вход, Профил, Изход */
+.navbar .button {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.navbar .button:hover {
+  background-color: #0056b3;
+}

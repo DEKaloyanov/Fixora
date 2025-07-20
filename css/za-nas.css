@@ -1,0 +1,75 @@
+/* Навигационен бар */
+header {
+  background-color: #ffffff;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo-small {
+  height: 40px;
+  cursor: pointer;
+}
+
+.navbar {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navbar li a:hover,
+.navbar li a.active {
+  color: #4c97e7;
+  font-weight: 600;
+}
+
+/* Основна част */
+main.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  background-color: #f9f9f9;
+  min-height: 80vh;
+}
+
+main.centered h1 {
+  font-size: 2.5em;
+  color: #002147;
+  margin-bottom: 30px;
+}
+
+main.centered p {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  max-width: 900px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #444;
+  text-align: justify;
+}
+
+/* Footer */
+footer {
+  background-color: #002147;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+}
