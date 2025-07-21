@@ -1,11 +1,11 @@
 /* Хедър и навигация */
 header {
   background-color: #ffffff;
-  padding: 10px 30px;
+  padding: 5px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 4px solid #546987;
   position: sticky;
   top: 0;
 }
@@ -25,15 +25,34 @@ header {
 
 .navbar li a {
   text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  transition: color 0.2s;
+  color: #1f4365;
+  font:icon;
+  padding: 10px 10px;
+  font-weight: bold;
+  font-size: 20px;
+  transition: color 0.75s;
 }
 
 .navbar li a:hover {
-  color: #4c97e7;
+  padding: 10px 10px;
+  border-radius: 20px;
+  background-color: #1f4365;
+  color: rgba(255, 255, 255, 0.781);
+  text-decoration: none;
 }
 
+.navbar li a.button {
+      padding: 10px;
+      padding-right: 40px;
+      border-radius: 20px;
+      background-color: #1f4365;
+      color: rgba(255, 255, 255, 0.781);
+      text-decoration: none;
+    }
+
+    .navbar li a.button:hover {
+      background-color: #274e7a;
+    }
 
 
 /* Централно съдържание */
@@ -44,40 +63,73 @@ header {
   justify-content: center;
   min-height: 80vh;
   padding: 20px;
+  position: relative;
+  text-align: center;
 }
 
 /* Лого */
 .logoto-large {
-  width: 400px;
+  width: 750px;
   height: auto;
+  margin-bottom: 40px;
 }
 
 /* Главни бутони */
-.main-buttons-alt {
-  display: flex;
-  gap: 20px;
-  font-size: 30px;
-  margin-bottom: 30px;
-}
-
-.main-buttons-alt a {
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-}
-
-.main-buttons-alt a:hover {
-  background-color: #0056b3;
-}
-
-.divider {
+/*.divider {
   align-self: center;
   font-weight: bold;
   color: #444;
+}*/
+
+/* Контейнер с относително позициониране */
+.main-buttons-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 80px; /* или колкото е височината на бутоните */
 }
+
+/* Централната линия — абсолютно центрирана */
+.divider-vertical {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 350px;
+  background-color: #546987;
+}
+
+/* Бутоните */
+.main-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font:icon;
+  font-weight: bold;
+  font-size: 36px;
+  color: #1d3a5c;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: color 0.3s;
+  white-space: nowrap;
+}
+
+/* Ляв и десен бутон - на разстояние от divider-а */
+.left-button {
+  right: 52%; /* Може да коригираш процента за разстоянието */
+}
+
+.right-button {
+  left: 52%;
+}
+
+.main-button:hover {
+  color: #336699;
+}
+
+
 
 /* Информационна секция */
 .trust-info {
@@ -85,7 +137,6 @@ header {
   justify-content: space-between;
   width: 100%;
   max-width: 1000px;
-  margin-top: 40px;
 }
 
 .trust-info .column {
@@ -93,14 +144,18 @@ header {
 }
 
 .trust-info h3 {
-  color: #007bff;
+  color: #1f4365;
+  font:icon;
+  font-size: 32px;
   margin-bottom: 10px;
 }
 
 .section-divider {
   width: 100%;
+  height: 4px;
   max-width: 1000px;
   margin: 30px auto;
+  background-color: #546987;
 }
 
 /* Футър */

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Fixora – Начало</title>
-  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/index.css?v=<?php echo time(); ?>">
   <style>
     .login-toast {
       position: fixed;
@@ -29,29 +29,20 @@
       100% { opacity: 0; top: 0px; }
     }
 
-    .navbar li a.button {
-      padding: 6px 14px;
-      border-radius: 6px;
-      background-color: #002147;
-      color: white;
-      text-decoration: none;
-    }
-
-    .navbar li a.button:hover {
-      background-color: #1d3a5c;
-    }
+    
   </style>
 </head>
 <body>
   <header>
-    <a href="index.php"><img src="img/Untitled-1.png" alt="Fixora Logo" class="logo-small"></a>
+    <?php include('php/navbar.php'); ?>
+
+
+    <!--<a href="index.php"><img src="img/Untitled-2.png" alt="Fixora Logo" class="logo-small"></a>
     <nav>
       <ul class="navbar">
         <li><a href="php/all_jobs.php">Обяви</a></li>
-        <li><a href="pages/obqvi.html">Работодатели</a></li>
         <li><a href="pages/chat.html">Чат</a></li>
-        <li><a href="pages/kalkulator.html">Калкулатор</a></li>
-        <li><a href="pages/za-nas.php">За нас</a></li>
+        <li><a href="pages/za-nas.html">За нас</a></li>
         <li><a href="pages/kontakt.html">Контакти</a></li>
         <?php if (isset($_SESSION['user'])): ?>
           <li><a href="php/profil.php" class="button">Профил</a></li>
@@ -60,7 +51,7 @@
           <li><a href="#" id="loginBtn" class="button">Вход</a></li>
         <?php endif; ?>
       </ul>
-    </nav>
+    </nav>-->
   </header>
 
   <?php if (isset($_GET['login']) && $_GET['login'] === 'success'): ?>
@@ -73,24 +64,26 @@
   <?php endif; ?>
 
   <main class="centered">
-    <img src="img/Untitled-1.png" alt="Fixora Large Logo" class="logoto-large">
+    <img src="img/Untitled-2.png" alt="Fixora Large Logo" class="logoto-large">
 
-    <div class="main-buttons-alt">
-      <a href="pages/vhod-klient.html">Предлагам работа</a>
-      <span class="divider">|</span>
-      <a href="pages/vhod-maistor.html">Търся работа</a>
-    </div>
+  <div class="main-buttons-wrapper">
+    <a href="pages/vhod-klient.html" class="main-button left-button">Предлагам работа</a>
+
+    <div class="divider-vertical"></div>
+
+    <a href="pages/vhod-maistor.html" class="main-button right-button">Търся работа</a>
+  </div>
 
     <hr class="section-divider">
 
     <div class="trust-info">
       <div class="column">
-        <h3>Защо да избереш нас като работодател?</h3>
-        <p>Fixora гарантира сигурност чрез нашата система – плащаш на нас, а ние плащаме на майстора само когато работата е свършена.</p>
+        <h3>Защо да предлагате работа в Fixora?</h3>
+        <!--<p>Fixora гарантира сигурност чрез нашата система – плащаш на нас, а ние плащаме на майстора само когато работата е свършена.</p>-->
       </div>
       <div class="column">
-        <h3>Защо да избереш нас като майстор?</h3>
-        <p>Сигурни плащания, повече клиенти и рейтингова система. Възможност за развитие и видимост.</p>
+        <h3>Защо да търсите работа в Fixora?</h3>
+        <!--<p>Сигурни плащания, повече клиенти и рейтингова система. Възможност за развитие и видимост.</p>-->
       </div>
     </div>
     

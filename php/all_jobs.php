@@ -64,7 +64,7 @@ require 'db.php';
 </head>
 <body>
 <header>
-  <a href="../index.php"><img src="../img/logo.png" class="logo-small" alt="Fixora"></a>
+  <!<a href="../index.php"><img src="../img/logo.png" class="logo-small" alt="Fixora"></a>
   <nav>
     <ul class="navbar">
       <li><a href="all_jobs.php">Обяви</a></li>
