@@ -24,16 +24,32 @@ $query .= " ORDER BY created_at DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute($params);
 $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Зареждане на профилните снимки за seek обяви
+$userImages = [];
+foreach ($jobs as $j) {
+    if ($j['job_type'] === 'seek' && !isset($userImages[$j['user_id']])) {
+        $uStmt = $conn->prepare("SELECT profile_image FROM users WHERE id = :id LIMIT 1");
+        $uStmt->execute(['id' => $j['user_id']]);
+        $user = $uStmt->fetch(PDO::FETCH_ASSOC);
+        $userImages[$j['user_id']] = !empty($user['profile_image']) ? '../uploads/' . $user['profile_image'] : '../img/default-user.png';
+    }
+}
+
 
 // Генериране на HTML за всяка обява
 foreach ($jobs as $job) {
-    $image = '../img/no-image.png';
-    if (!empty($job['images'])) {
-        $images = json_decode($job['images'], true);
-        if (is_array($images) && !empty($images[0])) {
-            $image = '../' . htmlspecialchars($images[0]);
+    if ($job['job_type'] === 'seek') {
+        $image = $userImages[$job['user_id']] ?? '../img/default-user.png';
+    } else {
+        $image = '../img/no-image.png';
+        if (!empty($job['images'])) {
+            $images = json_decode($job['images'], true);
+            if (is_array($images) && !empty($images[0])) {
+                $image = '../' . htmlspecialchars($images[0]);
+            }
         }
     }
+
 
     echo '<div class="job-card" onclick="location.href=\'job_details.php?id=' . $job['id'] . '\'">';
     echo '  <div class="job-image">';
@@ -41,7 +57,25 @@ foreach ($jobs as $job) {
     echo '  </div>';
 
     echo '  <div class="job-details">';
-    echo '    <h3>' . htmlspecialchars($job['profession']) . '</h3>';
+    $professionMap = [
+        'elektrikar' => 'Електротехник',
+        'zidar' => 'Зидар',
+        'kofraj' => 'Кофражист',
+        'bojadjia' => 'Бояджия',
+        'mazach' => 'Мазач',
+        'armat' => 'Арматурист',
+        'dvijenie' => 'Работник по пътна поддръжка',
+        'tehnik' => 'Техник',
+        'dograma' => 'Монтажник на дограма',
+        'vhodove' => 'Овластител входове',
+        // добави още при нужда
+    ];
+
+    $professionKey = $job['profession'];
+    $professionName = $professionMap[$professionKey] ?? ucfirst($professionKey);
+
+    echo '    <h3> ' . htmlspecialchars($professionName) . '</h3>';
+
 
     if ($job['city']) {
         echo '<p><strong>Град:</strong> ' . htmlspecialchars($job['city']) . '</p>';
@@ -61,7 +95,7 @@ foreach ($jobs as $job) {
         echo '<p><strong>Описание:</strong> ' . nl2br(htmlspecialchars($job['description'])) . '</p>';
     }
 
-    echo '    <a href="edit_job.php?id=' . $job['id'] . '" class="button edit-btn">✏️ Редактирай</a>';
+    echo '    <a href="edit_job.php?id=' . $job['id'] . '" class="button edit-btn">Редактирай</a>';
     echo '  </div>';
     echo '</div>';
 }

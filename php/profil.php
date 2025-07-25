@@ -8,117 +8,69 @@ if (!isset($_SESSION['user'])) {
 }
 
 $user = $_SESSION['user'];
+
 ?>
 <!DOCTYPE html>
 <html lang="bg">
 <head>
+    <?php include 'navbar.php'; ?>
     <meta charset="UTF-8">
     <title>Моят Профил - Fixora</title>
-    <link rel="stylesheet" href="../css/profil.css">
-    <style>
-        .profile-container { display: flex; margin: 20px; gap: 30px; }
-        .profile-image { width: 250px; height: 250px; object-fit: cover; border-radius: 8px; }
-        .job-filter-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-            padding: 10px;
-            background: #f5f5f5;
-        }
-        .filter-btn {
-            padding: 10px 20px;
-            background: #ddd;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .filter-btn.active {
-            background: #002147;
-            color: white;
-        }
-        .content-section {
-            display: none;
-            padding: 200px;
-            min-height: 300px;
-        }
-        .content-section.active {
-            display: block;
-        }
-        .job-form input, .job-form select, .job-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-        }
-        .footer-contacts {
-            background: #002147;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
-        #add-job-options {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        #add-job-options button {
-            padding: 10px 20px;
-            background: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/profil.css?v=<?php echo time(); ?>">
 </head>
 <body>
-<header>
-    <a href="../index.php"><img src="../img/logo.png" alt="Fixora Logo" class="logo-small"></a>
-    <nav>
-        <ul class="navbar">
-            <li><a href="all_jobs.php">Обяви</a></li>
-            <li><a href="../pages/obqvi.html">Работодатели</a></li>
-            <li><a href="../pages/chat.html">Чат</a></li>
-            <li><a href="../pages/kalkulator.html">Калкулатор</a></li>
-            <li><a href="../pages/za-nas.html">За нас</a></li>
-            <li><a href="../pages/kontakt.html">Контакти</a></li>
-            <li><a href="logout.php">Изход</a></li>
-        </ul>
-    </nav>
-</header>
-
 <main>
     <div class="profile-container">
-        <div class="profile-left">
-            <img src="<?php echo !empty($user['profile_image']) ? '../uploads/'.$user['profile_image'] : '../img/default-user.png'; ?>" class="profile-image" alt="Профилна снимка">
-        </div>
-        <div class="profile-info">
-            <h2><?php echo htmlspecialchars($user['username']); ?></h2>
-            <p>Име: <?php echo htmlspecialchars($user['ime']); ?></p>
-            <p>Фамилия: <?php echo htmlspecialchars($user['familiq']); ?></p>
-            <a href="edit_profile.php" class="edit-profile-button">✏️ Редактирай профила</a>
-
+        <!--<div class="profile-container">-->
+            <div class="profile-left">
+                <img src="<?php echo !empty($user['profile_image']) ? '../uploads/'.$user['profile_image'] : '../img/default-user.png'; ?>" class="profile-image" alt="Профилна снимка">
+            </div>
+            <div class="profile-info">
+                <p><span class="label">Потребителско име:</span> <span class="value"><?= htmlspecialchars($user['username']) ?></span></p>
+                <p><span class="label">Име:</span> <span class="value"><?= htmlspecialchars($user['ime']) ?></span></p>
+                <p><span class="label">Фамилия:</span> <span class="value"><?= htmlspecialchars($user['familiq']) ?></span></p>
+                
+                <?php if ($user['show_email']) echo '<p><span class="label">Имейл:</span> <span class="value">' . htmlspecialchars($user['email']) . '</span></p>'; ?>
+                <?php if ($user['show_phone']) echo '<p><span class="label">Телефон:</span> <span class="value">' . htmlspecialchars($user['telefon']) . '</span></p>'; ?>
+                <?php if ($user['show_city']) echo '<p><span class="label">Град:</span> <span class="value">' . htmlspecialchars($user['city']) . '</span></p>'; ?>
+                <?php if ($user['show_age']) echo '<p><span class="label">Години:</span> <span class="value">' . htmlspecialchars($user['age']) . '</span></p>'; ?>
+                <a href="edit_profile.php" class="edit-profile-button"> Редактирай профила</a>
+                <form action="/Fixora/php/logout.php" method="post">
+                    <button type="submit" style="margin-top: 15px;">Изход</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div class="job-filter-buttons">
-        <button class="filter-btn active" data-filter="all">Всички обяви</button>
-        <button class="filter-btn" data-filter="offer">Предлагам работа</button>
-        <button class="filter-btn" data-filter="seek">Търся работа</button>
-        <button class="filter-btn" data-filter="add">Добави обява</button>
+    <!-- Начало на секцията с бутони и обяви -->
+    <div class="job-controls">
+        <div class="main-buttons">
+            <button id="btn-all-jobs" class="active">Всички обяви</button>
+            <button id="btn-add-job">Добави обява</button>
+        </div>
+        <div class="job-sub-buttons all">
+            <button id="btn-offer">Предлагам работа</button>
+            <button id="btn-seek">Търся работа</button>
+        </div>
+        <div class="job-sub-buttons add">
+            <button id="btn-add-offer">Добави работа</button>
+            <button id="btn-add-seek">Добави екип</button>
+        </div>
     </div>
+
+    <!-- Място за показване на формите за добавяне -->
+    <div id="jobFormContainer"></div>
+
+    <!-- Място за зареждане на обявите -->
+    <div id="jobList"></div>
+
+<!-- Останалата част от HTML кода остава същата -->
 
     <div id="all-jobs" class="content-section active"><div id="jobList"></div></div>
     <div id="offer-jobs" class="content-section"><div id="offerJobList"></div></div>
     <div id="seek-jobs" class="content-section"><div id="seekJobList"></div></div>
 
     <div id="add-job-section" class="content-section">
-        <div id="add-job-options">
-            <button id="btn-add-offer">Добави работа</button>
-            <button id="btn-add-seek">Добави екип</button>
-        </div>
         <form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">
             <!-- Тук се зарежда формата с JS -->
         </form>
@@ -223,5 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadJobs('seek');
 });
 </script>
+<script src="../js/profil.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
