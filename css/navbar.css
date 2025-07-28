@@ -54,6 +54,96 @@ header {
       background-color: #274e7a;
     }
 
+/* Existing styles... */
+
+/* Dropdown Styles */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-menu li {
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+  padding-left: 25px;
+}
+
+/* Add a small arrow to the dropdown toggle */
+.dropdown-toggle::after {
+  content: "▼";
+  font-size: 0.6em;
+  margin-left: 5px;
+  vertical-align: middle;
+  transition: transform 0.3s ease;
+}
+
+.dropdown:hover .dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+
+/* Animation for dropdown items */
+.dropdown-menu li {
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu li {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Staggered animation for dropdown items */
+.dropdown-menu li:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.dropdown-menu li:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.dropdown-menu li:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
 
 
 /* Toast за вход */

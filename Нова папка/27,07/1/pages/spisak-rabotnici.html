@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Списък с майстори</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .filters {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+
+    .filters label {
+      font-weight: bold;
+    }
+
+    .filters select {
+      padding: 8px;
+      margin-right: 10px;
+      margin-top: 5px;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #007bff;
+    }
+
+    .card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Всички обявени услуги от майстори</h1>
+
+    <div class="filters">
+      <label for="filterType">Филтър по услуга:</label>
+      <select id="filterType">
+        <option value="">Всички</option>
+        <option value="Къртене">Къртене</option>
+        <option value="Замазка">Замазка</option>
+        <option value="Боядисване">Боядисване</option>
+        <option value="Шпакловка">Шпакловка</option>
+        <option value="Друго">Друго</option>
+      </select>
+
+      <label for="filterCity">Филтър по град:</label>
+      <select id="filterCity">
+        <option value="">Всички</option>
+      </select>
+    </div>
+
+    <div id="servicesList"></div>
+  </div>
+
+  <script>
+    const services = JSON.parse(localStorage.getItem("maistor_services")) || [];
+
+    const servicesList = document.getElementById("servicesList");
+    const filterType = document.getElementById("filterType");
+    const filterCity = document.getElementById("filterCity");
+
+    // Извличане на уникални градове
+    const uniqueCities = [...new Set(services.map(s => s.location).filter(city => city))];
+    uniqueCities.forEach(city => {
+      const opt = document.createElement("option");
+      opt.value = city;
+      opt.textContent = city;
+      filterCity.appendChild(opt);
+    });
+
+    function displayServices(filtered = services) {
+      servicesList.innerHTML = "";
+
+      if (filtered.length === 0) {
+        servicesList.innerHTML = "<p>Няма услуги по избраните критерии.</p>";
+        return;
+      }
+
+      filtered.forEach(service => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <h3>${service.type}</h3>
+          <p><strong>Цена:</strong> ${service.price} лв</p>
+          <p><strong>Местоположение:</strong> ${service.location}</p>
+          <p><strong>Време за реакция:</strong> ${service.reaction} дни</p>
+          <p><strong>Описание:</strong> ${service.description}</p>
+          ${service.image ? `<img src="${service.image}" alt="Снимка">` : ''}
+        `;
+        servicesList.appendChild(card);
+      });
+    }
+
+    // При смяна на филтрите
+    function applyFilters() {
+      const type = filterType.value;
+      const city = filterCity.value;
+
+      const filtered = services.filter(service => {
+        const matchType = !type || service.type === type;
+        const matchCity = !city || service.location === city;
+        return matchType && matchCity;
+      });
+
+      displayServices(filtered);
+    }
+
+    filterType.addEventListener("change", applyFilters);
+    filterCity.addEventListener("change", applyFilters);
+
+    // Първоначално зареждане
+    displayServices();
+  </script>
+</body>
+</html>

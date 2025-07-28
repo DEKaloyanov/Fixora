@@ -42,6 +42,39 @@ $user = $_SESSION['user'];
         </div>
     </div>
 
+
+    <?php
+    // Заявки за свързване
+    $stmt = $conn->prepare("
+        SELECT cr.*, ime, familiq, profile_image
+        FROM connection_requests cr
+        JOIN users u ON cr.sender_id = u.id
+        WHERE cr.receiver_id = ? AND cr.status = 'pending'
+        ORDER BY cr.created_at DESC
+    ");
+    $stmt->execute([$user['id']]);
+    $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($requests):
+    ?>
+    <div class="connection-requests">
+        <h3>Заявки за свързване:</h3>
+        <?php foreach ($requests as $req): ?>
+            <div class="request-card">
+                <img src="<?php echo !empty($req['profile_image']) ? '../uploads/' . htmlspecialchars($req['profile_image']) : '../img/default-user.png'; ?>" alt="Профил" class="avatar">
+                <span><?php echo htmlspecialchars($req['ime'] . ' ' . $req['familiq']); ?></span>
+                <form action="approve_request.php" method="post" style="display: inline;">
+                    <input type="hidden" name="request_id" value="<?php echo $req['id']; ?>">
+                    <button name="action" value="accept">✅ Приеми</button>
+                    <button name="action" value="decline">❌ Откажи</button>
+                </form>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+
+
     <!-- Начало на секцията с бутони и обяви -->
     <div class="job-controls">
         <div class="main-buttons">

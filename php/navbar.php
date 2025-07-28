@@ -10,7 +10,6 @@ if (session_status() === PHP_SESSION_NONE) {
   <link rel="stylesheet" href="../css/navbar.css?v=<?php echo time(); ?>">
 </head>
 
-
 <header>
   <a href="/Fixora/index.php"><img src="/Fixora/img/Untitled-2.png" alt="Fixora Logo" class="logo-small"></a>
   <nav>
@@ -19,11 +18,17 @@ if (session_status() === PHP_SESSION_NONE) {
       <li><a href="/Fixora/pages/kalkulator.php">Калкулатор</a></li>
       <li><a href="/Fixora/pages/za-nas.php">За нас</a></li>
       <li><a href="/Fixora/pages/kontakt.php">Запитвания</a></li>
-      <li><a href="/Fixora/pages/chat.php">Чат</a></li>
+      <li><a href="/Fixora/php/chat.php">Чат</a></li>
       <?php if (isset($_SESSION['user'])): ?>
-        <li><a href="/Fixora/php/profil.php" class="button"><?= htmlspecialchars($_SESSION['user']['username']) ?></a></li>
-        <?php else: ?>
-          
+        <li class="dropdown">
+          <a href="/Fixora/php/profil.php" class="button dropdown-toggle"><?= htmlspecialchars($_SESSION['user']['username']) ?></a>
+          <ul class="dropdown-menu">
+            <li><a href="/Fixora/php/profil.php">Обяви</a></li>
+            <li><a href="/Fixora/php/chat.php">Чат</a></li>
+            <li><a href="/Fixora/php/edit_profile.php">Редактиране</a></li>
+          </ul>
+        </li>
+      <?php else: ?>
         <li><a href="#" onclick="openLoginModal()">Вход</a></li>
         <li><a href="#" onclick="openRegisterModal()">Регистрация</a></li>
       <?php endif; ?>
@@ -33,8 +38,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <!-- Overlay -->
 <div id="overlay"></div>
-
-
 
 <!-- Login Modal -->
 <?php
@@ -59,21 +62,19 @@ if (!isset($_SESSION['user']) && $currentPage !== 'profil.php'):
     <div class="modal-content">
       <span class="close" onclick="closeRegisterModal()">&times;</span>
       <h2>Регистрация</h2>
-      <form action="/Fixora/php/register.php" method="post">
-        <input type="text" name="username" placeholder="Потребителско име" required>
-        <input type="text" name="ime" placeholder="Име" required>
-        <input type="text" name="familiq" placeholder="Фамилия" required>
-        <input type="text" name="telefon" placeholder="Телефон" required>
-        <input type="email" name="email" placeholder="Имейл" required>
-        <input type="password" name="password" placeholder="Парола" required>
-        <input type="password" name="confirmPassword" placeholder="Потвърди паролата" required>
-        <button type="submit">Регистрация</button>
+      <form action="php/register.php" method="POST" class="register-form">
+          <input type="text" name="username" placeholder="Потребителско име" required>
+          <input type="text" name="ime" placeholder="Име" required>
+          <input type="text" name="familiq" placeholder="Фамилия" required>
+          <input type="text" name="telefon" placeholder="Телефон" required>
+          <input type="email" name="email" placeholder="Имейл" required>
+          <input type="password" name="password" placeholder="Парола" required>
+          <input type="password" name="confirm_password" placeholder="Потвърди парола" required>
+          <button type="submit">Регистрация</button>
       </form>
-
     </div>
   </div>
 <?php endif; ?>
-
 
 <script src="/Fixora/js/modal.js"></script>
 </html>

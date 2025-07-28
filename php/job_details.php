@@ -62,6 +62,28 @@ $images = json_decode($job['images'], true);
 
     <p><strong>Описание:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
     <p><strong>Собственик:</strong> <?php echo htmlspecialchars($job['username']); ?></p>
+    <?php
+    session_start();
+    if (isset($_SESSION['user']) && $_SESSION['user']['id'] !== $job['user_id']) {
+        // Проверка дали вече има изпратена заявка
+        $check = $conn->prepare("SELECT * FROM connection_requests WHERE sender_id = ? AND receiver_id = ? AND id = ?");
+        $check->execute([$_SESSION['user']['id'], $job['user_id'], $job['id']]);
+        $existing = $check->fetch();
+
+        if (!$existing) {
+            echo '<form action="send_request.php" method="POST" style="margin-top: 20px;">
+                    <input type="hidden" name="job_id" value="' . $job['id'] . '">
+                    <input type="hidden" name="receiver_id" value="' . $job['user_id'] . '">
+                    <button type="submit" style="padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px;">
+                        📩 Интересувам се
+                    </button>
+                </form>';
+        } else {
+            echo '<p style="margin-top: 20px; color: gray;">Вече сте изпратили заявка за тази обява.</p>';
+        }
+    }
+    ?>
+
 </div>
 
 </body>
