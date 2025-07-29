@@ -14,11 +14,11 @@ if (session_status() === PHP_SESSION_NONE) {
   <a href="/Fixora/index.php"><img src="/Fixora/img/Untitled-2.png" alt="Fixora Logo" class="logo-small"></a>
   <nav>
     <ul class="navbar">
-      <li><a href="/Fixora/php/all_jobs.php">Обяви</a></li>
-      <li><a href="/Fixora/pages/kalkulator.php">Калкулатор</a></li>
-      <li><a href="/Fixora/pages/za-nas.php">За нас</a></li>
-      <li><a href="/Fixora/pages/kontakt.php">Запитвания</a></li>
-      <li><a href="/Fixora/php/chat.php">Чат</a></li>
+      <li><a href="/Fixora/php/all_jobs.php" class="<?= basename($_SERVER['PHP_SELF']) == 'all_jobs.php' ? 'active' : '' ?>">Обяви</a></li>
+      <li><a href="/Fixora/pages/kalkulator.php" class="<?= basename($_SERVER['PHP_SELF']) == 'kalkulator.php' ? 'active' : '' ?>">Калкулатор</a></li>
+      <li><a href="/Fixora/pages/za-nas.php" class="<?= basename($_SERVER['PHP_SELF']) == 'za-nas.php' ? 'active' : '' ?>">За нас</a></li>
+      <li><a href="/Fixora/pages/kontakt.php" class="<?= basename($_SERVER['PHP_SELF']) == 'kontakt.php' ? 'active' : '' ?>">Запитвания</a></li>
+      <li><a href="/Fixora/php/chat.php" class="<?= basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : '' ?>">Чат</a></li>
       <?php if (isset($_SESSION['user'])): ?>
         <li class="dropdown">
           <a href="/Fixora/php/profil.php" class="button dropdown-toggle"><?= htmlspecialchars($_SESSION['user']['username']) ?></a>
@@ -35,6 +35,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </ul>
   </nav>
 </header>
+
 
 <!-- Overlay -->
 <div id="overlay"></div>

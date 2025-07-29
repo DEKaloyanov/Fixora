@@ -62,7 +62,7 @@ $user = $_SESSION['user'];
         <?php foreach ($requests as $req): ?>
             <div class="request-card">
                 <img src="<?php echo !empty($req['profile_image']) ? '../uploads/' . htmlspecialchars($req['profile_image']) : '../img/default-user.png'; ?>" alt="Профил" class="avatar">
-                <span><?php echo htmlspecialchars($req['ime'] . ' ' . $req['familiq']); ?></span>
+                <span><?php echo htmlspecialchars($req['ime'] . ' ' . $req['last_name']); ?></span>
                 <form action="approve_request.php" method="post" style="display: inline;">
                     <input type="hidden" name="request_id" value="<?php echo $req['id']; ?>">
                     <button name="action" value="accept">✅ Приеми</button>
@@ -77,10 +77,6 @@ $user = $_SESSION['user'];
 
     <!-- Начало на секцията с бутони и обяви -->
     <div class="job-controls">
-        <div class="main-buttons">
-            <button id="btn-all-jobs" class="active">Всички обяви</button>
-            <button id="btn-add-job">Добави обява</button>
-        </div>
         <div class="job-sub-buttons all">
             <button id="btn-offer">Предлагам работа</button>
             <button id="btn-seek">Търся работа</button>
@@ -88,6 +84,10 @@ $user = $_SESSION['user'];
         <div class="job-sub-buttons add">
             <button id="btn-add-offer">Добави работа</button>
             <button id="btn-add-seek">Добави екип</button>
+        </div>
+        <div class="main-buttons">
+            <button id="btn-all-jobs">Всички обяви</button>
+            <button id="btn-add-job">Добави обява</button>
         </div>
     </div>
 
@@ -207,6 +207,34 @@ document.addEventListener("DOMContentLoaded", () => {
     loadJobs('offer');
     loadJobs('seek');
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const allBtn = document.getElementById('btn-all-jobs');
+  const addBtn = document.getElementById('btn-add-job');
+  const subAll = document.querySelector('.job-sub-buttons.all');
+  const subAdd = document.querySelector('.job-sub-buttons.add');
+
+  let timeout;
+
+  function toggleSubMenu(targetMenu, otherMenu) {
+    clearTimeout(timeout); // премахва всякакво старо забавяне
+    otherMenu.classList.remove('show');
+
+    // Задава малко закъснение за плавна анимация
+    timeout = setTimeout(() => {
+      targetMenu.classList.toggle('show');
+    }, 100);
+  }
+
+  allBtn.addEventListener('click', () => {
+    toggleSubMenu(subAll, subAdd);
+  });
+
+  addBtn.addEventListener('click', () => {
+    toggleSubMenu(subAdd, subAll);
+  });
+});
+
+
 </script>
 <script src="../js/profil.js?v=<?php echo time(); ?>"></script>
 </body>

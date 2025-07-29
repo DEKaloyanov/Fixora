@@ -1,0 +1,281 @@
+
+/* Основна стилизация */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgb(255, 255, 255);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Профилна секция */
+.profile-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 4px solid #1f4365;
+    border-radius: 2%;
+    padding-bottom: 20px;
+}
+
+.profile-left {
+    flex: 0 0 150px;
+    padding-right: 20px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #1f4365; /* синя рамка */
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.value {
+    margin-left: 5px;
+}
+
+.profile-info p {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: normal;
+    margin: 5px 0;
+}
+
+.profile-info .label {
+    flex: 0 0 150px; /* фиксирана ширина на етикета */
+    text-align: right; /* подравняване надясно */
+    font-weight: normal;
+    font-size: 16px;
+    color: #546987;
+}
+
+.profile-info .value {
+    text-align: left;
+    font-size: 20px;
+    color: #1f4365;
+}
+
+.connection-requests {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+.request-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.request-card img.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.request-card form button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+
+.main-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.main-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #1f4365;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.main-buttons button:hover {
+    background-color: #546987;
+}
+
+.main-buttons button.active {
+    background-color: #546987;
+}
+
+.edit-profile-button {
+    position: absolute;
+    top: 100px;
+    right: 335px;
+    background-color: #1f4365;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.edit-profile-button:hover {
+    background-color: #546987;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Контроли за обяви */
+.job-controls {
+    text-align: center;
+    margin-top: 30px;
+    position: relative;
+}
+
+.job-controls button {
+    margin: 5px 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #1f4365;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.job-controls button:hover {
+    background-color: #546987;
+}
+
+/* Подменюта */
+.job-sub-buttons {
+    display: none;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.job-sub-buttons button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #546987;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.job-sub-buttons button:hover {
+    background-color: #1f4365;
+}
+
+/* Показване на подменютата */
+.job-sub-buttons.all {
+    justify-content: flex-start;
+    margin-left: 20%;
+}
+
+.job-sub-buttons.add {
+    justify-content: flex-end;
+    margin-right: 20%;
+}
+
+.job-sub-buttons.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Формата и обявите */
+#jobFormContainer,
+#jobList {
+    margin-top: 30px;
+}
+
+/* Обява в списъка */
+.job-card {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+.job-card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.job-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.job-info {
+    flex-grow: 1;
+}
+
+.job-info h4 {
+    margin: 0 0 10px 0;
+}
+
+.edit-btn {
+    background-color: #1f4365;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #546987;
+}

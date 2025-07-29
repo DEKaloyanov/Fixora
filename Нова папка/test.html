@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Бутони плъзгащи се наляво</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #eef1f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .button-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+      gap: 10px;
+    }
+
+    .slide-button {
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.4s ease, opacity 0.2s ease;
+    }
+
+    .main-button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 2;
+      transition: background-color 0.3s ease;
+    }
+
+    .main-button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Когато активираме контейнера */
+    .button-wrapper.active .slide-button {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Задаваме начални позиции отдясно на основния бутон */
+    .slide-button:nth-child(2) {
+      order: -2;
+      transform: translateX(200%);
+      transition-delay: 0.05s;
+    }
+
+    .slide-button:nth-child(3) {
+      order: -1;
+      transform: translateX(100%);
+      transition-delay: 0.1s;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="button-wrapper" id="btnWrapper">
+    <button class="slide-button">Опция 1</button>
+    <button class="slide-button">Опция 2</button>
+    <button class="main-button" id="toggleBtn">Меню</button>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toggleBtn');
+    const btnWrapper = document.getElementById('btnWrapper');
+
+    toggleBtn.addEventListener('click', () => {
+      btnWrapper.classList.toggle('active');
+    });
+  </script>
+
+</body>
+</html>
