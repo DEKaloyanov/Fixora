@@ -1,3 +1,4 @@
+
 // Зареждане на обяви с филтър (всички, offer, seek)
 function loadJobs(type = '') {
     let url = 'fetch_jobs.php';
@@ -25,32 +26,58 @@ function showSubMenu(menuClass) {
     document.querySelector(`.job-sub-buttons.${menuClass}`).style.display = 'flex';
 }
 
+// Зареждане на формата за добавяне
+function loadJobForm(type) {
+    fetch('php/load_job_form.php?type=' + type)
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('jobList').innerHTML = ''; // Скрива обявите
+            document.getElementById('jobFormContainer').innerHTML = html;
+        })
+        .catch(err => console.error('Грешка при зареждане на форма:', err));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const allJobsBtn = document.getElementById('btn-all-jobs');
     const addJobBtn = document.getElementById('btn-add-job');
 
-    
-    
+    const leftGroup = document.querySelector('.job-sub-buttons.all');
+    const rightGroup = document.querySelector('.job-sub-buttons.add');
+
+    // Запазваме текущо активната група (left, right или null)
+    let activeGroup = 'left';
+
+    // Първоначално състояние
+    leftGroup.classList.add('show');
+    rightGroup.classList.remove('show');
+
     // Зарежда всички обяви при първоначално зареждане
     loadJobs();
-    showSubMenu('all');
 
     // Бутон за всички обяви
-    allJobsBtn.addEventListener('click', function(e) {
+    allJobsBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        this.classList.add('active');
-        addJobBtn.classList.remove('active');
-        loadJobs();
-        showSubMenu('all');
+        if (activeGroup !== 'left') {
+            activeGroup = 'left';
+            allJobsBtn.classList.add('active');
+            addJobBtn.classList.remove('active');
+            loadJobs();
+            leftGroup.classList.add('show');
+            rightGroup.classList.remove('show');
+        }
     });
 
     // Бутон за добавяне на обява
-    addJobBtn.addEventListener('click', function(e) {
+    addJobBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        this.classList.add('active');
-        allJobsBtn.classList.remove('active');
-        document.getElementById('jobList').innerHTML = '';
-        showSubMenu('add');
+        if (activeGroup !== 'right') {
+            activeGroup = 'right';
+            addJobBtn.classList.add('active');
+            allJobsBtn.classList.remove('active');
+            document.getElementById('jobList').innerHTML = '';
+            leftGroup.classList.remove('show');
+            rightGroup.classList.add('show');
+        }
     });
 
     // Бутони за зареждане на обяви
@@ -67,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('btn-add-offer').addEventListener('click', function(e) {
         e.preventDefault();
         loadJobForm('offer');
-        // Преглед на избрани снимки
+        const form = document.getElementById('jobFormContainer');
         form.querySelector('input[type="file"]').addEventListener('change', function () {
             const previewContainer = document.createElement('div');
             previewContainer.className = 'image-preview';
@@ -89,39 +116,4 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         loadJobForm('seek');
     });
-
-
-    document.addEventListener("DOMContentLoaded", () => {
-    const btnAllJobs = document.getElementById('btn-all-jobs');
-    const btnAddJob = document.getElementById('btn-add-job');
-
-    const leftGroup = document.querySelector('.job-sub-buttons.all');
-    const rightGroup = document.querySelector('.job-sub-buttons.add');
-
-    btnAllJobs.addEventListener('click', () => {
-        // Показваме лявата група
-        leftGroup.classList.add('show');
-        // Скриваме дясната група
-        rightGroup.classList.remove('show');
-    });
-
-    btnAddJob.addEventListener('click', () => {
-        // Показваме дясната група
-        rightGroup.classList.add('show');
-        // Скриваме лявата група
-        leftGroup.classList.remove('show');
-    });
 });
-
-});
-
-// Зареждане на формата за добавяне
-function loadJobForm(type) {
-    fetch('php/load_job_form.php?type=' + type)
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById('jobList').innerHTML = ''; // Скрива обявите
-            document.getElementById('jobFormContainer').innerHTML = html;
-        })
-        .catch(err => console.error('Грешка при зареждане на форма:', err));
-}

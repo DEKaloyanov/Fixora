@@ -62,7 +62,7 @@ $user = $_SESSION['user'];
         <?php foreach ($requests as $req): ?>
             <div class="request-card">
                 <img src="<?php echo !empty($req['profile_image']) ? '../uploads/' . htmlspecialchars($req['profile_image']) : '../img/default-user.png'; ?>" alt="Профил" class="avatar">
-                <span><?php echo htmlspecialchars($req['ime'] . ' ' . $req['last_name']); ?></span>
+                <span><?php echo htmlspecialchars($req['ime'] . ' ' . $req['familiq']); ?></span>
                 <form action="approve_request.php" method="post" style="display: inline;">
                     <input type="hidden" name="request_id" value="<?php echo $req['id']; ?>">
                     <button name="action" value="accept">✅ Приеми</button>
@@ -207,32 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadJobs('offer');
     loadJobs('seek');
 });
-document.addEventListener("DOMContentLoaded", () => {
-  const allBtn = document.getElementById('btn-all-jobs');
-  const addBtn = document.getElementById('btn-add-job');
-  const subAll = document.querySelector('.job-sub-buttons.all');
-  const subAdd = document.querySelector('.job-sub-buttons.add');
 
-  let timeout;
-
-  function toggleSubMenu(targetMenu, otherMenu) {
-    clearTimeout(timeout); // премахва всякакво старо забавяне
-    otherMenu.classList.remove('show');
-
-    // Задава малко закъснение за плавна анимация
-    timeout = setTimeout(() => {
-      targetMenu.classList.toggle('show');
-    }, 100);
-  }
-
-  allBtn.addEventListener('click', () => {
-    toggleSubMenu(subAll, subAdd);
-  });
-
-  addBtn.addEventListener('click', () => {
-    toggleSubMenu(subAdd, subAll);
-  });
-});
 
 
 </script>

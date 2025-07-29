@@ -35,3 +35,6 @@ $insert = $conn->prepare("
 $insert->execute([$sender_id, $receiver_id, $message]);
 
 echo "OK";
+
+$notify = $conn->prepare("INSERT INTO notifications (user_id, message, link) VALUES (?, ?, ?)");
+$notify->execute([$receiver_id, "Получихте ново съобщение.", "chat.php?with=$sender_id"]);

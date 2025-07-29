@@ -49,3 +49,6 @@ if ($action === 'accept') {
     header("Location: profil.php");
     exit;
 }
+
+$notify = $conn->prepare("INSERT INTO notifications (user_id, message, link) VALUES (?, ?, ?)");
+$notify->execute([$request['sender_id'], "Вашата заявка беше приета!", "chat.php?with=$user_id"]);

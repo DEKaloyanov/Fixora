@@ -32,3 +32,7 @@ $insert->execute([$sender_id, $receiver_id, $job_id]);
 
 header("Location: job_details.php?id=" . $job_id);
 exit;
+
+$notify = $conn->prepare("INSERT INTO notifications (user_id, message, link) VALUES (?, ?, ?)");
+$notify->execute([$receiver_id, "Получихте нова заявка за контакт.", "profil.php"]);
+

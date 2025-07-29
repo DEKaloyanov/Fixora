@@ -54,6 +54,23 @@ header {
       background-color: #274e7a;
     }
 
+
+.notification-link {
+    position: relative;
+    display: inline-block;
+}
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+
 /* Existing styles... */
 
 /* Dropdown Styles */

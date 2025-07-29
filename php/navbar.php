@@ -1,6 +1,14 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
+  require_once 'php/db.php';
+$unread_count = 0;
+if (isset($_SESSION['user'])) {
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
+    $stmt->execute([$_SESSION['user']['id']]);
+    $unread_count = $stmt->fetchColumn();
+}
+
 }
 ?>
 
@@ -19,6 +27,18 @@ if (session_status() === PHP_SESSION_NONE) {
       <li><a href="/Fixora/pages/za-nas.php" class="<?= basename($_SERVER['PHP_SELF']) == 'za-nas.php' ? 'active' : '' ?>">За нас</a></li>
       <li><a href="/Fixora/pages/kontakt.php" class="<?= basename($_SERVER['PHP_SELF']) == 'kontakt.php' ? 'active' : '' ?>">Запитвания</a></li>
       <li><a href="/Fixora/php/chat.php" class="<?= basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : '' ?>">Чат</a></li>
+      <li>
+        <a href="notifications.php" class="notification-link">
+            🔔
+            <?php if (isset($unread_count) && $unread_count > 0): ?>
+                <span class="badge"><?= $unread_count ?></span>
+            <?php endif; ?>
+
+        </a>
+      </li>
+
+      <!--<li><a href="search_jobs.php">Търси обяви</a></li>-->
+
       <?php if (isset($_SESSION['user'])): ?>
         <li class="dropdown">
           <a href="/Fixora/php/profil.php" class="button dropdown-toggle"><?= htmlspecialchars($_SESSION['user']['username']) ?></a>
