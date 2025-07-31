@@ -24,6 +24,7 @@ $query .= " ORDER BY created_at DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute($params);
 $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Зареждане на профилните снимки за seek обяви
 $userImages = [];
 foreach ($jobs as $j) {
@@ -34,7 +35,6 @@ foreach ($jobs as $j) {
         $userImages[$j['user_id']] = !empty($user['profile_image']) ? '../uploads/' . $user['profile_image'] : '../img/default-user.png';
     }
 }
-
 
 // Генериране на HTML за всяка обява
 foreach ($jobs as $job) {
@@ -50,32 +50,29 @@ foreach ($jobs as $job) {
         }
     }
 
-
     echo '<div class="job-card" onclick="location.href=\'job_details.php?id=' . $job['id'] . '\'">';
     echo '  <div class="job-image">';
     echo '    <img src="' . $image . '" alt="Обява">';
     echo '  </div>';
 
     echo '  <div class="job-details">';
+    
+    // Мапване на професиите към кирилица
     $professionMap = [
-        'elektrikar' => 'Електротехник',
+        'boqjdiq' => 'Бояджия',
         'zidar' => 'Зидар',
         'kofraj' => 'Кофражист',
-        'bojadjia' => 'Бояджия',
+        'elektrikar' => 'Електротехник',
         'mazach' => 'Мазач',
         'armat' => 'Арматурист',
         'dvijenie' => 'Работник по пътна поддръжка',
         'tehnik' => 'Техник',
         'dograma' => 'Монтажник на дограма',
-        'vhodove' => 'Овластител входове',
-        // добави още при нужда
+        'vhodove' => 'Овластител входове'
     ];
 
-    $professionKey = $job['profession'];
-    $professionName = $professionMap[$professionKey] ?? ucfirst($professionKey);
-
-    echo '    <h3> ' . htmlspecialchars($professionName) . '</h3>';
-
+    $professionName = $professionMap[$job['profession']] ?? ucfirst($job['profession']);
+    echo '    <h3>' . htmlspecialchars($professionName) . '</h3>';
 
     if ($job['city']) {
         echo '<p><strong>Град:</strong> ' . htmlspecialchars($job['city']) . '</p>';
@@ -90,6 +87,17 @@ foreach ($jobs as $job) {
     if ($job['price_per_day']) {
         echo '<p><strong>Надник:</strong> ' . htmlspecialchars($job['price_per_day']) . ' лв</p>';
     }
+
+    // Добавяне на показване на екипа (ако има)
+    if (!empty($job['team_members'])) {
+        $teamMembers = json_decode($job['team_members'], true);
+        if (is_array($teamMembers) && !empty($teamMembers)) {
+            echo '<p><strong>Екип:</strong> ' . htmlspecialchars(implode(', ', $teamMembers)) . '</p>';
+        }
+    }
+
+    // Добавяне на показване на всички снимки (ако има)
+
 
     if (!empty($job['description'])) {
         echo '<p><strong>Описание:</strong> ' . nl2br(htmlspecialchars($job['description'])) . '</p>';

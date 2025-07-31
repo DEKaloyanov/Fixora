@@ -107,16 +107,7 @@ $user = $_SESSION['user'];
 
 <!-- Останалата част от HTML кода остава същата -->
 
-    <div id="all-jobs" class="content-section active"><div id="jobList"></div></div>
-    <div id="offer-jobs" class="content-section"><div id="offerJobList"></div></div>
-    <div id="seek-jobs" class="content-section"><div id="seekJobList"></div></div>
 
-    <div id="add-job-section" class="content-section">
-        <form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">
-            <!-- Тук се зарежда формата с JS -->
-        </form>
-        <div id="add-job-container" style="display: none;"></div>
-    </div>
 </main>
 
 <div class="footer-contacts">
@@ -124,100 +115,143 @@ $user = $_SESSION['user'];
 </div>
 
 <script>
-// Филтриране
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+document.addEventListener("DOMContentLoaded", () => {
+    const allJobsBtn = document.getElementById('btn-all-jobs');
+    const addJobBtn = document.getElementById('btn-add-job');
+    const leftGroup = document.querySelector('.job-sub-buttons.all');
+    const rightGroup = document.querySelector('.job-sub-buttons.add');
 
-        const filter = this.dataset.filter;
-        const sectionId = filter === 'add' ? 'add-job-section' : `${filter}-jobs`;
-        const section = document.getElementById(sectionId);
-        if (section) section.classList.add('active');
-    });
-});
+    // Първоначално състояние
+    allJobsBtn.classList.add('active');
+    leftGroup.classList.add('show');
+    loadJobs();
 
-// Зареждане на форми
-document.getElementById('btn-add-offer').addEventListener('click', () => {
-    const form = document.getElementById('jobForm');
-    form.innerHTML = `
-        <input type="hidden" name="job_type" value="offer">
-        <label>Тип работа:</label>
-        <select name="profession" required>
-            <option value="">Избери тип работа</option>
-            <option value="boqjdiq">Бояджия</option>
-            <option value="zidar">Зидар</option>
-            <option value="kofraj">Кофражист</option>
-            <option value="elektrikar">Електротехник</option>
-        </select>
-        <label>Населено място:</label>
-        <input type="text" name="location" required placeholder="Изберете град">
-        <label>Надник:</label>
-        <input type="number" name="price_per_day" placeholder="Въведете надник">
-        <label>Цена на квадрат:</label>
-        <input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">
-        <label>Снимки:</label>
-        <input type="file" name="images[]" multiple accept="image/*">
-        <label>Описание:</label>
-        <textarea name="description" placeholder="Описание (незадължително)"></textarea>
-        <button type="submit">Запази обявата</button>
-    `;
-});
-
-document.getElementById('btn-add-seek').addEventListener('click', () => {
-    const form = document.getElementById('jobForm');
-    form.innerHTML = `
-        <input type="hidden" name="job_type" value="seek">
-        <label>Тип работа:</label>
-        <select name="profession" required>
-            <option value="">Избери тип работа</option>
-            <option value="boqjdiq">Бояджия</option>
-            <option value="zidar">Зидар</option>
-            <option value="kofraj">Кофражист</option>
-            <option value="elektrikar">Електротехник</option>
-        </select>
-        <label>Населено място:</label>
-        <input type="text" name="city" required placeholder="Изберете град">
-        <label>Брой работници:</label>
-        <input type="number" name="team_size" id="teamSize" min="1" max="20" value="1" required>
-        <div id="teamMemberFields"></div>
-        <label>Надник:</label>
-        <input type="number" name="price_per_day" placeholder="Въведете надник">
-        <label>Цена на квадрат:</label>
-        <input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">
-        <label>Описание:</label>
-        <textarea name="description" placeholder="Описание (незадължително)"></textarea>
-        <button type="submit">Запази обявата</button>
-    `;
-    document.getElementById('teamSize').addEventListener('input', function () {
-        const container = document.getElementById('teamMemberFields');
-        container.innerHTML = '';
-        for (let i = 1; i <= this.value; i++) {
-            container.innerHTML += `<input type="text" name="team_member_${i}" placeholder="Име на работник ${i}" required>`;
+    // Бутон за всички обяви
+    allJobsBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!allJobsBtn.classList.contains('active')) {
+            allJobsBtn.classList.add('active');
+            addJobBtn.classList.remove('active');
+            leftGroup.classList.add('show');
+            rightGroup.classList.remove('show');
+            loadJobs();
         }
     });
-});
 
+    // Бутон за добавяне на обява
+    addJobBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!addJobBtn.classList.contains('active')) {
+            addJobBtn.classList.add('active');
+            allJobsBtn.classList.remove('active');
+            leftGroup.classList.remove('show');
+            rightGroup.classList.add('show');
+            document.getElementById('jobList').innerHTML = '';
+            document.getElementById('jobFormContainer').style.display = 'block';
+        }
+    });
+
+    // Бутони за зареждане на обяви
+    document.getElementById('btn-offer').addEventListener('click', function(e) {
+        e.preventDefault();
+        loadJobs('offer');
+    });
+
+    document.getElementById('btn-seek').addEventListener('click', function(e) {
+        e.preventDefault();
+        loadJobs('seek');
+    });
+
+    // Бутони за добавяне на обяви
+    document.getElementById('btn-add-offer').addEventListener('click', function(e) {
+        e.preventDefault();
+        loadJobForm('offer');
+    });
+
+    document.getElementById('btn-add-seek').addEventListener('click', function(e) {
+        e.preventDefault();
+        loadJobForm('seek');
+    });
+
+    // Функция за зареждане на обяви
 // Зареждане на обяви
 function loadJobs(type = '') {
-    let target = 'jobList';
-    if (type === 'offer') target = 'offerJobList';
-    if (type === 'seek') target = 'seekJobList';
     fetch(`fetch_jobs.php${type ? '?type=' + type : ''}`)
         .then(res => res.text())
         .then(html => {
-            document.getElementById(target).innerHTML = html;
+            document.getElementById('jobList').innerHTML = html;
         });
 }
-document.addEventListener("DOMContentLoaded", () => {
-    loadJobs();
-    loadJobs('offer');
-    loadJobs('seek');
+}
+
+    // Функция за зареждане на форма
+    function loadJobForm(type) {
+        document.getElementById('jobList').innerHTML = '';
+        document.getElementById('jobFormContainer').style.display = 'block';
+        
+        const formHTML = type === 'offer' ? `
+            <form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="job_type" value="offer">
+                <label>Тип работа:</label>
+                <select name="profession" required>
+                    <option value="">Избери тип работа</option>
+                    <option value="boqjdiq">Бояджия</option>
+                    <option value="zidar">Зидар</option>
+                    <option value="kofraj">Кофражист</option>
+                    <option value="elektrikar">Електротехник</option>
+                </select>
+                <label>Населено място:</label>
+                <input type="text" name="location" required placeholder="Изберете град">
+                <label>Надник:</label>
+                <input type="number" name="price_per_day" placeholder="Въведете надник">
+                <label>Цена на квадрат:</label>
+                <input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">
+                <label>Снимки:</label>
+                <input type="file" name="images[]" multiple accept="image/*">
+                <label>Описание:</label>
+                <textarea name="description" placeholder="Описание (незадължително)"></textarea>
+                <button type="submit">Запази обявата</button>
+            </form>
+        ` : `
+            <form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="job_type" value="seek">
+                <label>Тип работа:</label>
+                <select name="profession" required>
+                    <option value="">Избери тип работа</option>
+                    <option value="boqjdiq">Бояджия</option>
+                    <option value="zidar">Зидар</option>
+                    <option value="kofraj">Кофражист</option>
+                    <option value="elektrikar">Електротехник</option>
+                </select>
+                <label>Населено място:</label>
+                <input type="text" name="city" required placeholder="Изберете град">
+                <label>Брой работници:</label>
+                <input type="number" name="team_size" id="teamSize" min="1" max="20" value="1" required>
+                <div id="teamMemberFields"></div>
+                <label>Надник:</label>
+                <input type="number" name="price_per_day" placeholder="Въведете надник">
+                <label>Цена на квадрат:</label>
+                <input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">
+                <label>Описание:</label>
+                <textarea name="description" placeholder="Описание (незадължително)"></textarea>
+                <button type="submit">Запази обявата</button>
+            </form>
+        `;
+        
+        document.getElementById('jobFormContainer').innerHTML = formHTML;
+        
+        // Инициализиране на event listeners
+        if (type === 'seek') {
+            document.getElementById('teamSize').addEventListener('input', function() {
+                const container = document.getElementById('teamMemberFields');
+                container.innerHTML = '';
+                for (let i = 1; i <= this.value; i++) {
+                    container.innerHTML += `<input type="text" name="team_member_${i}" placeholder="Име на работник ${i}" required>`;
+                }
+            });
+        }
+    }
 });
-
-
-
 </script>
 <script src="../js/profil.js?v=<?php echo time(); ?>"></script>
 </body>
