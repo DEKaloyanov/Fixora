@@ -10,6 +10,12 @@ require 'db.php';
   <link rel="stylesheet" href="../css/style.css">
   <?php include 'navbar.php'; ?>
   <style>
+    body {
+  background-image: url("../img/FON=FIXORA.png"); /* пътят до изображението */
+  background-size:cover;        /* покрива цялата страница */
+  background-repeat: repeat;  /* да не се повтаря */
+  background-position: center;   /* центрира изображението */
+}
     .jobs-wrapper {
       max-width: 1200px;
       margin: 0 auto;

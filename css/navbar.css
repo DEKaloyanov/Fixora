@@ -5,7 +5,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 4px solid #546987;
+  border-bottom: 4px solid rgb(84, 105, 135);
   position: sticky;
   top: 0;
 }
@@ -25,50 +25,65 @@ header {
 
 .navbar li a {
   text-decoration: none;
-  color: #1f4365;
+  color: rgb(31, 67, 101);
   font:icon;
   padding: 10px 10px;
   font-weight: bold;
   font-size: 20px;
-  transition: color 0.75s;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease;
+  z-index: 1;
 }
 
-.navbar li a:hover {
-  padding: 10px 10px;
-  border-radius: 5px;
-  background-color: #1f4365;
-  color: rgba(255, 255, 255, 0.781);
-  text-decoration: none;
+
+
+
+.navbar li a::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 130%;
+  background: radial-gradient(circle, rgba(84, 105, 135, 0.4) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0);
+  /*transition: transform 0.5s ease;*/
+  border-radius: 80%;
+  z-index: 0;
 }
+
+.navbar li a:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.navbar li a span,
+.navbar li a i,
+.navbar li a {
+  position: relative;
+  z-index: 1;
+}
+
 
 .navbar li a.button {
       padding: 10px;
       padding-right: 40px;
-      border-radius: 20px;
+      border-radius: 5px;
       background-color: #1f4365;
       color: rgba(255, 255, 255, 0.781);
       text-decoration: none;
     }
+
+    .navbar li a.button::before {
+  display: none !important;
+}
+
 
     .navbar li a.button:hover {
       background-color: #274e7a;
     }
 
 
-.notification-link {
-    position: relative;
-    display: inline-block;
-}
-.badge {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background: red;
-    color: white;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 50%;
-}
 
 
 /* Existing styles... */
@@ -82,18 +97,24 @@ header {
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px); /* малък отстояние под бутона */
   right: 0;
+  left: auto;
+  max-width: 220px; /* ограничаваме максималната ширина */
+  width: max-content; /* менюто да е толкова широко, колкото съдържанието */
+  transform: translateY(-10px);
   background-color: #fff;
-  min-width: 200px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
   border-radius: 8px;
   overflow: hidden;
   z-index: 1000;
   opacity: 0;
-  transform: translateY(-10px);
   transition: all 0.3s ease;
+  padding: 0;
+  margin: 0;
 }
+
+
 
 .dropdown:hover .dropdown-menu {
   display: block;
@@ -105,6 +126,7 @@ header {
   padding: 0;
   margin: 0;
   border-bottom: 1px solid #f0f0f0;
+
 }
 
 .dropdown-menu li:last-child {
@@ -117,12 +139,13 @@ header {
   color: #333;
   text-decoration: none;
   transition: all 0.3s ease;
+  text-align: left;
+  margin: 0;
 }
 
 .dropdown-menu a:hover {
   background-color: #f8f9fa;
-  color: #007bff;
-  padding-left: 25px;
+  color: #1f4365;
 }
 
 /* Add a small arrow to the dropdown toggle */
@@ -160,6 +183,8 @@ header {
 .dropdown-menu li:nth-child(3) {
   transition-delay: 0.3s;
 }
+
+
 
 
 
@@ -215,7 +240,7 @@ header {
 }
 
 .modal-content button {
-  background-color: #007bff;
+  background-color: #1f4365;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -226,7 +251,7 @@ header {
 }
 
 .modal-content button:hover {
-  background-color: #0056b3;
+  background-color: #1f4365;
 }
 
 .modal-content .close {
@@ -248,3 +273,4 @@ header {
   height: 100%;
   background-color: rgba(0,0,0,0.4);
 }
+

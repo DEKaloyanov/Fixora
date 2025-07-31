@@ -3,9 +3,11 @@
 <html lang="bg">
 <head>
   <meta charset="UTF-8" />
-  <title>Fixora – Начало</title>
   <?php include 'php/navbar.php'; ?>
+
+  <title>Fixora – Начало</title>
   <link rel="stylesheet" href="css/index.css?v=<?php echo time(); ?>">
+  
 
 </head>
 <body>
@@ -43,6 +45,7 @@
   <div id="overlay"></div>
 
   <!-- Модален Вход -->
-  
+
+
 </body>
 </html>

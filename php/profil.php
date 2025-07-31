@@ -1,6 +1,8 @@
 <?php
 session_start();
 require('db.php');
+$role = $_SESSION['user']['role'] ?? 'user';
+
 
 if (!isset($_SESSION['user'])) {
     header('Location: ../index.php');
@@ -35,9 +37,15 @@ $user = $_SESSION['user'];
                 <?php if ($user['show_city']) echo '<p><span class="label">Град:</span> <span class="value">' . htmlspecialchars($user['city']) . '</span></p>'; ?>
                 <?php if ($user['show_age']) echo '<p><span class="label">Години:</span> <span class="value">' . htmlspecialchars($user['age']) . '</span></p>'; ?>
                 <a href="edit_profile.php" class="edit-profile-button"> Редактирай профила</a>
-                <form action="/Fixora/php/logout.php" method="post">
-                    <button type="submit" style="margin-top: 15px;">Изход</button>
-                </form>
+                
+                <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+                    <div style="text-align: right; margin: 10px;">
+                        <a href="admin/admin.php" style="padding: 10px 15px; background: #002147; color: white; text-decoration: none; border-radius: 5px;">
+                            ⚙️ Админ панел
+                        </a>
+                    </div>
+                <?php endif; ?>
+
             </div>
         </div>
     </div>

@@ -1,58 +1,19 @@
 /* Хедър и навигация */
 header {
-  background-color: #ffffff;
+  /*background-color: #ffffff;
   padding: 5px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 4px solid #546987;
   position: sticky;
-  top: 0;
+  top: 0;*/
 }
 
-.logo-small {
-  height: 40px;
-  cursor: pointer;
+header {
+  z-index: 1002;
 }
 
-.navbar {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  padding: 0;
-  margin: 0;
-}
-
-.navbar li a {
-  text-decoration: none;
-  color: #1f4365;
-  font:icon;
-  padding: 10px 10px;
-  font-weight: bold;
-  font-size: 20px;
-  transition: color 0.75s;
-}
-
-.navbar li a:hover {
-  padding: 10px 10px;
-  border-radius: 20px;
-  background-color: #1f4365;
-  color: rgba(255, 255, 255, 0.781);
-  text-decoration: none;
-}
-
-.navbar li a.button {
-      padding: 10px;
-      padding-right: 40px;
-      border-radius: 20px;
-      background-color: #1f4365;
-      color: rgba(255, 255, 255, 0.781);
-      text-decoration: none;
-    }
-
-    .navbar li a.button:hover {
-      background-color: #274e7a;
-    }
 
 
 /* Централно съдържание */
@@ -261,3 +222,4 @@ footer {
   height: 100%;
   background-color: rgba(0,0,0,0.4);
 }
+

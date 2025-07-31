@@ -15,7 +15,8 @@ if (isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <link rel="stylesheet" href="../css/navbar.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" href="/Fixora/css/navbar.css?v=<?php echo time(); ?>">
+
 </head>
 
 <header>
@@ -29,7 +30,7 @@ if (isset($_SESSION['user'])) {
       <li><a href="/Fixora/php/chat.php" class="<?= basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : '' ?>">Чат</a></li>
       <li>
         <a href="notifications.php" class="notification-link">
-            🔔
+            Извстия
             <?php if (isset($unread_count) && $unread_count > 0): ?>
                 <span class="badge"><?= $unread_count ?></span>
             <?php endif; ?>
@@ -46,6 +47,7 @@ if (isset($_SESSION['user'])) {
             <li><a href="/Fixora/php/profil.php">Обяви</a></li>
             <li><a href="/Fixora/php/chat.php">Чат</a></li>
             <li><a href="/Fixora/php/edit_profile.php">Редактиране</a></li>
+            <li><a href="/Fixora/php/logout.php">Изход</a></li>
           </ul>
         </li>
       <?php else: ?>
