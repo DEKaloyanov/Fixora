@@ -19,6 +19,7 @@ $user = $_SESSION['user'];
     <meta charset="UTF-8">
     <title>Моят Профил - Fixora</title>
     <link rel="stylesheet" href="../css/profil.css?v=<?php echo time(); ?>">
+    
 </head>
 <body>
 <main>
@@ -110,9 +111,9 @@ $user = $_SESSION['user'];
 
 </main>
 
-<div class="footer-contacts">
-    <p>Контакти: support@fixora.bg | Телефон: 0888 123 456</p>
-</div>
+  <footer>
+    <p>Свържи се с нас: support@fixora.bg | +359 888 123 456</p>
+  </footer>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {

@@ -27,7 +27,7 @@ if (isset($_SESSION['user'])) {
       <li><a href="/Fixora/pages/kalkulator.php" class="<?= basename($_SERVER['PHP_SELF']) == 'kalkulator.php' ? 'active' : '' ?>">Калкулатор</a></li>
       <li><a href="/Fixora/pages/za-nas.php" class="<?= basename($_SERVER['PHP_SELF']) == 'za-nas.php' ? 'active' : '' ?>">За нас</a></li>
       <li><a href="/Fixora/pages/kontakt.php" class="<?= basename($_SERVER['PHP_SELF']) == 'kontakt.php' ? 'active' : '' ?>">Запитвания</a></li>
-      <li><a href="/Fixora/php/chat.php" class="<?= basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : '' ?>">Чат</a></li>
+      <li><a href="/Fixora/chat.php" class="<?= basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : '' ?>">Чат</a></li>
       <li>
         <a href="notifications.php" class="notification-link">
             Извстия

@@ -27,18 +27,23 @@ if (!$request) {
     echo "Заявката не е намерена.";
     exit;
 }
-
 if ($action === 'accept') {
-    // Добавяме нова връзка
-    $insert = $conn->prepare("INSERT INTO connections (user1_id, user2_id) VALUES (?, ?)");
-    $insert->execute([$user_id, $request['sender_id']]);
-    
-    // Обновяваме статуса
+    $job_id = $request['job_id'];
+
+    // Създаване на връзка
+    $insert = $conn->prepare("INSERT INTO connections (user1_id, user2_id, job_id) VALUES (?, ?, ?)");
+    $insert->execute([$user_id, $request['sender_id'], $job_id]);
+
+    // Обновяване на заявката
     $update = $conn->prepare("UPDATE connection_requests SET status = 'accepted' WHERE id = ?");
     $update->execute([$request_id]);
 
-    // Пренасочване към чат страницата (по избор)
-    header("Location: chat.php?with=" . $request['sender_id']);
+    // Известие
+    $notify = $conn->prepare("INSERT INTO notifications (user_id, message, link) VALUES (?, ?, ?)");
+    $notify->execute([$request['sender_id'], "Вашата заявка беше приета!", "chat.php?with=$user_id&job=$job_id"]);
+
+    // Пренасочване
+    header("Location: ../chat.php?with=" . $request['sender_id'] . "&job=" . $job_id);
     exit;
 
 } else {

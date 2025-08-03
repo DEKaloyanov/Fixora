@@ -19,16 +19,18 @@ if (!$receiver_id || !$job_id) {
 }
 
 // Проверка дали вече има изпратена заявка
-$stmt = $conn->prepare("SELECT * FROM connection_requests WHERE sender_id = ? AND receiver_id = ? AND id = ?");
+$stmt = $conn->prepare("SELECT * FROM connection_requests WHERE sender_id = ? AND receiver_id = ? AND job_id = ?");
 $stmt->execute([$sender_id, $receiver_id, $job_id]);
+
 if ($stmt->fetch()) {
     echo "Вече сте изпратили заявка.";
     exit;
 }
 
 // Записване на заявката
-$insert = $conn->prepare("INSERT INTO connection_requests (sender_id, receiver_id, id, status) VALUES (?, ?, ?, 'pending')");
+$insert = $conn->prepare("INSERT INTO connection_requests (sender_id, receiver_id, job_id, status) VALUES (?, ?, ?, 'pending')");
 $insert->execute([$sender_id, $receiver_id, $job_id]);
+
 
 header("Location: job_details.php?id=" . $job_id);
 exit;

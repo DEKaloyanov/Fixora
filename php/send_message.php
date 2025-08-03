@@ -1,40 +1,48 @@
 <?php
 session_start();
-require 'db.php';
+require_once 'db.php';
 
-if (!isset($_SESSION['user'])) {
-    http_response_code(401);
-    exit;
+if (!isset($_SESSION['user']['id'])) {
+    exit('Грешка: не сте влезли в системата.');
 }
 
-$sender_id = $_SESSION['user']['id'];
-$receiver_id = $_POST['receiver_id'] ?? null;
+$current_user_id = $_SESSION['user']['id'];
+$receiver_id = isset($_POST['receiver_id']) ? (int)$_POST['receiver_id'] : 0;
+$job_id = isset($_POST['job_id']) ? (int)$_POST['job_id'] : 0;
 $message = trim($_POST['message'] ?? '');
 
-if (!$receiver_id || $receiver_id == $sender_id || $message === '') {
-    http_response_code(400);
-    exit;
+if ($receiver_id === 0 || $job_id === 0 || $message === '') {
+    exit('Невалидни данни.');
 }
 
-// Проверка за връзка
+// Проверка за валидна връзка
 $stmt = $conn->prepare("
-    SELECT * FROM connections
-    WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)
+    SELECT id FROM connections 
+    WHERE job_id = :job_id AND (
+        (user1_id = :uid AND user2_id = :rid) OR 
+        (user1_id = :rid AND user2_id = :uid)
+    )
 ");
-$stmt->execute([$sender_id, $receiver_id, $receiver_id, $sender_id]);
-if (!$stmt->fetch()) {
-    http_response_code(403);
-    exit;
+$stmt->execute([
+    'job_id' => $job_id,
+    'uid' => $current_user_id,
+    'rid' => $receiver_id
+]);
+
+if ($stmt->rowCount() === 0) {
+    exit('Нямате право да изпратите съобщение.');
 }
 
-// Записване на съобщението
-$insert = $conn->prepare("
-    INSERT INTO messages (sender_id, receiver_id, message, created_at)
-    VALUES (?, ?, ?, NOW())
+// Запис на съобщение
+$stmt = $conn->prepare("
+    INSERT INTO messages (sender_id, receiver_id, job_id, message, created_at, is_read)
+    VALUES (:sid, :rid, :job_id, :msg, NOW(), 0)
 ");
-$insert->execute([$sender_id, $receiver_id, $message]);
+$stmt->execute([
+    'sid' => $current_user_id,
+    'rid' => $receiver_id,
+    'job_id' => $job_id,
+    'msg' => $message
+]);
 
-echo "OK";
-
-$notify = $conn->prepare("INSERT INTO notifications (user_id, message, link) VALUES (?, ?, ?)");
-$notify->execute([$receiver_id, "Получихте ново съобщение.", "chat.php?with=$sender_id"]);
+echo 'ok';
