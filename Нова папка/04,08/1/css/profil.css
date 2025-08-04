@@ -1,0 +1,453 @@
+
+/* Основна стилизация */
+body {
+    font-family: Arial, sans-serif;
+  background-image: url("../img/FON=FIXORA.png"); /* пътят до изображението */
+  background-size:cover;        /* покрива цялата страница */
+  background-repeat: repeat;  /* да не се повтаря */
+  background-position: center;   /* центрира изображението */
+
+}
+
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    /*background: rgb(255, 255, 255);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+}
+
+/* Профилна секция */
+.profile-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 4px solid #1f4365;
+    border-radius: 2%;
+    padding-bottom: 20px;
+}
+
+.profile-left {
+    flex: 0 0 150px;
+    padding-right: 20px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #1f4365; /* синя рамка */
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.value {
+    margin-left: 5px;
+}
+
+.profile-info p {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: normal;
+    margin: 5px 0;
+}
+
+.profile-info .label {
+    flex: 0 0 150px; /* фиксирана ширина на етикета */
+    text-align: right; /* подравняване надясно */
+    font-weight: normal;
+    font-size: 16px;
+    color: #546987;
+}
+
+.profile-info .value {
+    text-align: left;
+    font-size: 20px;
+    color: #1f4365;
+}
+
+.connection-requests {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+.request-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.request-card img.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.request-card form button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.edit-profile-button {
+    position: absolute;
+    top: 100px;
+    right: 335px;
+    background-color: #1f4365;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.edit-profile-button:hover {
+    background-color: #546987;
+}
+
+
+
+
+
+
+
+
+
+
+
+.job-controls {
+  position: relative;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.main-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  position: relative;
+  z-index: 2;
+}
+
+.main-buttons button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #1f4365;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.main-buttons button:hover {
+  background-color: #546987;
+}
+
+.job-sub-buttons {
+  position: absolute;
+  top: 0;
+  display: flex;
+  gap: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  z-index: 1;
+}
+
+.job-sub-buttons button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #546987;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.job-sub-buttons button:hover {
+  background-color: #1f4365;
+}
+
+/* Подменю отляво (плъзгане наляво от „Всички обяви“) */
+.job-sub-buttons.all {
+  right: calc(65.5% + 1px);
+  transform: translateX(53%);
+}
+
+.job-sub-buttons.all.show {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Подменю отдясно (плъзгане надясно от „Добави обява“) */
+.job-sub-buttons.add {
+  left: calc(65.5% + 1px);
+  transform: translateX(-53%);
+}
+
+.job-sub-buttons.add.show {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Формата и обявите */
+#jobFormContainer,
+#jobList {
+    margin-top: 30px;
+}
+
+/* Обява в списъка */
+.job-card {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+.job-card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.job-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.job-info {
+    flex-grow: 1;
+}
+
+.job-info h4 {
+    margin: 0 0 10px 0;
+}
+
+.edit-btn {
+    background-color: #1f4365;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #546987;
+}
+
+
+/* Общ контейнер на формата */
+/* Контейнер за трите колони */
+#jobForm {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 20px 0;
+    animation: fadeInForm 0.4s ease-in-out;
+    font-family: 'Segoe UI', sans-serif;
+    flex-wrap: wrap;
+}
+
+/* Общ стил за всяка от трите колони */
+.job-form-column {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Етикети и полета */
+#jobForm label {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 4px;
+}
+
+#jobForm input[type="text"],
+#jobForm input[type="number"],
+#jobForm input[type="file"],
+#jobForm select,
+#jobForm textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#jobForm input:focus,
+#jobForm select:focus,
+#jobForm textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+/* Текстово поле */
+#jobForm textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Бутон за запазване */
+#jobForm button[type="submit"] {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+#jobForm button[type="submit"]:hover {
+    background-color: #2563eb;
+}
+
+/* Полета за членове на екип */
+#teamMemberFields input[type="text"] {
+    margin-top: 6px;
+}
+
+/* Преглед на снимки */
+.image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+
+@keyframes fadeInForm {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+footer {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 15px 10px;
+  font-size: 14px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+#active-projects-section {
+    padding: 20px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.active-project-card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.timeline {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.timeline .step {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: #eee;
+}
+
+.timeline .step.done {
+    background: #4caf50;
+    color: white;
+    font-weight: bold;
+}
+
+#ratings-section {
+    margin-top: 40px;
+    background: #fdfdfd;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.rating-card {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.rating-card.given {
+    background: #f8f8f8;
+}
+
+.rating-card span {
+    font-weight: bold;
+    color: #ffa500;
+}

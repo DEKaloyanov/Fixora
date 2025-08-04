@@ -65,10 +65,9 @@ function loadJobForm(type) {
 
     document.getElementById('jobList').innerHTML = '';
     document.getElementById('jobFormContainer').innerHTML = formHTML;
-    
-    // Инициализиране на event listeners
+
     if (type === 'seek') {
-        document.getElementById('teamSize').addEventListener('input', function() {
+        document.getElementById('teamSize').addEventListener('input', function () {
             const container = document.getElementById('teamMemberFields');
             container.innerHTML = '';
             for (let i = 1; i <= this.value; i++) {
@@ -76,18 +75,17 @@ function loadJobForm(type) {
             }
         });
     }
-    
-    // Инициализиране на file input preview
+
     const fileInput = document.querySelector('input[type="file"]');
     if (fileInput) {
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
             const previewContainer = document.createElement('div');
             previewContainer.className = 'image-preview';
             this.parentNode.appendChild(previewContainer);
             previewContainer.innerHTML = '';
             Array.from(this.files).forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const img = document.createElement('img');
                     img.src = e.target.result;
                     previewContainer.appendChild(img);
@@ -101,6 +99,7 @@ function loadJobForm(type) {
 document.addEventListener("DOMContentLoaded", () => {
     const allJobsBtn = document.getElementById('btn-all-jobs');
     const addJobBtn = document.getElementById('btn-add-job');
+    const activeProjectsBtn = document.getElementById('active-projects-btn');
     const leftGroup = document.querySelector('.job-sub-buttons.all');
     const rightGroup = document.querySelector('.job-sub-buttons.add');
 
@@ -110,48 +109,69 @@ document.addEventListener("DOMContentLoaded", () => {
     loadJobs();
 
     // Бутон за всички обяви
-    allJobsBtn.addEventListener('click', function(e) {
+    allJobsBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (!allJobsBtn.classList.contains('active')) {
             allJobsBtn.classList.add('active');
             addJobBtn.classList.remove('active');
             leftGroup.classList.add('show');
             rightGroup.classList.remove('show');
-            loadJobs();
         }
+        document.getElementById('active-projects-section').style.display = 'none';
+        document.getElementById('jobList').style.display = 'block';
+        document.getElementById('jobFormContainer').style.display = 'none';
+        loadJobs();
     });
 
     // Бутон за добавяне на обява
-    addJobBtn.addEventListener('click', function(e) {
+    addJobBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (!addJobBtn.classList.contains('active')) {
             addJobBtn.classList.add('active');
             allJobsBtn.classList.remove('active');
             leftGroup.classList.remove('show');
             rightGroup.classList.add('show');
-            document.getElementById('jobList').innerHTML = '';
         }
+        document.getElementById('active-projects-section').style.display = 'none';
+        document.getElementById('jobList').style.display = 'none';
+        document.getElementById('jobFormContainer').style.display = 'block';
+    });
+
+    // Бутон за активни обяви
+    activeProjectsBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        allJobsBtn.classList.remove('active');
+        addJobBtn.classList.remove('active');
+        leftGroup.classList.remove('show');
+        rightGroup.classList.remove('show');
+
+        document.getElementById('jobList').style.display = 'none';
+        document.getElementById('jobFormContainer').style.display = 'none';
+        document.getElementById('active-projects-section').style.display = 'block';
     });
 
     // Бутони за зареждане на обяви
-    document.getElementById('btn-offer').addEventListener('click', function(e) {
+    document.getElementById('btn-offer').addEventListener('click', function (e) {
         e.preventDefault();
         loadJobs('offer');
     });
 
-    document.getElementById('btn-seek').addEventListener('click', function(e) {
+    document.getElementById('btn-seek').addEventListener('click', function (e) {
         e.preventDefault();
         loadJobs('seek');
     });
 
     // Бутони за добавяне на обяви
-    document.getElementById('btn-add-offer').addEventListener('click', function(e) {
+    document.getElementById('btn-add-offer').addEventListener('click', function (e) {
         e.preventDefault();
         loadJobForm('offer');
     });
 
-    document.getElementById('btn-add-seek').addEventListener('click', function(e) {
+    document.getElementById('btn-add-seek').addEventListener('click', function (e) {
         e.preventDefault();
         loadJobForm('seek');
     });
+
+    // Скрий активните обяви по начало
+    document.getElementById('active-projects-section').style.display = 'none';
 });

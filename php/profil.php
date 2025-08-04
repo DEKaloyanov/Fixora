@@ -10,6 +10,8 @@ if (!isset($_SESSION['user'])) {
 }
 
 $user = $_SESSION['user'];
+$current_user_id = $user['id'];
+
 
 ?>
 <!DOCTYPE html>
@@ -37,6 +39,74 @@ $user = $_SESSION['user'];
                 <?php if ($user['show_phone']) echo '<p><span class="label">Телефон:</span> <span class="value">' . htmlspecialchars($user['telefon']) . '</span></p>'; ?>
                 <?php if ($user['show_city']) echo '<p><span class="label">Град:</span> <span class="value">' . htmlspecialchars($user['city']) . '</span></p>'; ?>
                 <?php if ($user['show_age']) echo '<p><span class="label">Години:</span> <span class="value">' . htmlspecialchars($user['age']) . '</span></p>'; ?>
+                <div id="ratings-section">
+    <h2>Оценки и обратна връзка</h2>
+
+    <h3>⭐ Средна оценка:</h3>
+    <?php
+    $current_user_id = $_SESSION['user']['id'];
+    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE to_user_id = ?");
+    $stmt->execute([$current_user_id]);
+    $avg = $stmt->fetchColumn();
+    echo $avg ? number_format($avg, 2) . ' / 5' : 'Няма оценки';
+    ?>
+
+    <h3>✅ Получени оценки:</h3>
+    <?php
+    $stmt = $conn->prepare("
+        SELECT r.*, u.ime, u.familiq 
+        FROM ratings r 
+        JOIN users u ON u.id = r.from_user_id 
+        WHERE r.to_user_id = ?
+        ORDER BY r.created_at DESC
+    ");
+    $stmt->execute([$current_user_id]);
+    $received = $stmt->fetchAll();
+
+    if ($received):
+        foreach ($received as $rate): ?>
+            <div class="rating-card">
+                <strong><?= htmlspecialchars($rate['ime'] . ' ' . $rate['familiq']) ?></strong>
+                <span>Оценка: <?= str_repeat('⭐', (int)$rate['rating']) ?></span>
+                <?php if (!empty($rate['comment'])): ?>
+                    <p><?= htmlspecialchars($rate['comment']) ?></p>
+                <?php endif; ?>
+                <small><?= date('d.m.Y H:i', strtotime($rate['created_at'])) ?></small>
+            </div>
+        <?php endforeach;
+    else:
+        echo "<p>Няма получени оценки.</p>";
+    endif;
+    ?>
+
+    <h3>📤 Дадени от вас оценки:</h3>
+    <?php
+    $stmt = $conn->prepare("
+        SELECT r.*, u.ime, u.familiq 
+        FROM ratings r 
+        JOIN users u ON u.id = r.to_user_id 
+        WHERE r.from_user_id = ?
+        ORDER BY r.created_at DESC
+    ");
+    $stmt->execute([$current_user_id]);
+    $given = $stmt->fetchAll();
+
+    if ($given):
+        foreach ($given as $rate): ?>
+            <div class="rating-card given">
+                <strong><?= htmlspecialchars($rate['ime'] . ' ' . $rate['familiq']) ?></strong>
+                <span>Оценка: <?= str_repeat('⭐', (int)$rate['rating']) ?></span>
+                <?php if (!empty($rate['comment'])): ?>
+                    <p><?= htmlspecialchars($rate['comment']) ?></p>
+                <?php endif; ?>
+                <small><?= date('d.m.Y H:i', strtotime($rate['created_at'])) ?></small>
+            </div>
+        <?php endforeach;
+    else:
+        echo "<p>Няма дадени оценки.</p>";
+    endif;
+    ?>
+</div>
                 <a href="edit_profile.php" class="edit-profile-button"> Редактирай профила</a>
                 
                 <?php if ($_SESSION['user']['role'] === 'admin'): ?>
@@ -50,6 +120,11 @@ $user = $_SESSION['user'];
             </div>
         </div>
     </div>
+
+    <?php
+$current_user_id = $user['id'];
+?>
+
 
 
     <?php
@@ -96,6 +171,7 @@ $user = $_SESSION['user'];
         </div>
         <div class="main-buttons">
             <button id="btn-all-jobs">Всички обяви</button>
+            <button id="active-projects-btn">Активни обяви</button>
             <button id="btn-add-job">Добави обява</button>
         </div>
     </div>
@@ -105,6 +181,75 @@ $user = $_SESSION['user'];
 
     <!-- Място за зареждане на обявите -->
     <div id="jobList"></div>
+
+    <div id="active-projects-section" style="display: none;">
+    <h2>Активни обяви</h2>
+    <?php
+    $stmt = $conn->prepare("
+        SELECT ps.*, j.profession, j.description, u1.ime AS user1_ime, u1.familiq AS user1_familiq, u1.profile_image AS user1_img,
+                             u2.ime AS user2_ime, u2.familiq AS user2_familiq, u2.profile_image AS user2_img
+        FROM project_status ps
+        JOIN jobs j ON j.id = ps.job_id
+        JOIN users u1 ON u1.id = ps.user1_id
+        JOIN users u2 ON u2.id = ps.user2_id
+        WHERE (ps.user1_id = ? OR ps.user2_id = ?)
+    ");
+    $stmt->execute([$current_user_id, $current_user_id]);
+    $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($projects as $project):
+        $other_user_id = ($project['user1_id'] == $current_user_id) ? $project['user2_id'] : $project['user1_id'];
+        $other_user_name = ($project['user1_id'] == $current_user_id)
+            ? $project['user2_ime'] . ' ' . $project['user2_familiq']
+            : $project['user1_ime'] . ' ' . $project['user1_familiq'];
+        $other_user_img = ($project['user1_id'] == $current_user_id)
+            ? $project['user2_img']
+            : $project['user1_img'];
+
+        $you_started = ($project['user1_id'] == $current_user_id) ? $project['user1_started'] : $project['user2_started'];
+        $they_started = ($project['user1_id'] == $current_user_id) ? $project['user2_started'] : $project['user1_started'];
+
+        $you_rated = ($project['user1_id'] == $current_user_id) ? $project['user1_rated'] : $project['user2_rated'];
+        $they_rated = ($project['user1_id'] == $current_user_id) ? $project['user2_rated'] : $project['user1_rated'];
+    ?>
+        <div class="active-project-card">
+            <h3><?= htmlspecialchars($project['profession']) ?></h3>
+            <p><?= htmlspecialchars($project['description']) ?></p>
+
+            <div class="timeline">
+                <div class="step <?= $you_started ? 'done' : '' ?>">Вие започнахте</div>
+                <div class="step <?= $they_started ? 'done' : '' ?>"><?= htmlspecialchars($other_user_name) ?> започна</div>
+            </div>
+
+            <?php if (!$you_started): ?>
+                <form method="POST" action="start_project.php">
+                    <input type="hidden" name="job_id" value="<?= $project['job_id'] ?>">
+                    <button type="submit">Започни проекта</button>
+                </form>
+            <?php endif; ?>
+
+            <?php if ($you_started && $they_started && !$you_rated): ?>
+                <form method="POST" action="submit_rating.php">
+                    <input type="hidden" name="to_user_id" value="<?= $other_user_id ?>">
+                    <input type="hidden" name="job_id" value="<?= $project['job_id'] ?>">
+                    <label>Оцени потребителя:</label>
+                    <select name="rating" required>
+                        <option value="">Избери</option>
+                        <option value="5">⭐⭐⭐⭐⭐</option>
+                        <option value="4">⭐⭐⭐⭐</option>
+                        <option value="3">⭐⭐⭐</option>
+                        <option value="2">⭐⭐</option>
+                        <option value="1">⭐</option>
+                    </select>
+                    <textarea name="comment" placeholder="Коментар (незадължителен)"></textarea>
+                    <button type="submit">Изпрати оценка</button>
+                </form>
+            <?php elseif ($you_rated): ?>
+                <p>✅ Вече сте оценили този потребител.</p>
+            <?php endif; ?>
+        </div>
+    <?php endforeach; ?>
+</div>
 
 <!-- Останалата част от HTML кода остава същата -->
 
@@ -252,7 +397,13 @@ function loadJobs(type = '') {
             });
         }
     }
-});
+);
+
+
+
+
+
+
 </script>
 <script src="../js/profil.js?v=<?php echo time(); ?>"></script>
 </body>

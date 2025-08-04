@@ -395,3 +395,59 @@ footer {
   left: 0;
   width: 100%;
 }
+
+#active-projects-section {
+    padding: 20px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.active-project-card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.timeline {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.timeline .step {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: #eee;
+}
+
+.timeline .step.done {
+    background: #4caf50;
+    color: white;
+    font-weight: bold;
+}
+
+#ratings-section {
+    margin-top: 40px;
+    background: #fdfdfd;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.rating-card {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.rating-card.given {
+    background: #f8f8f8;
+}
+
+.rating-card span {
+    font-weight: bold;
+    color: #ffa500;
+}

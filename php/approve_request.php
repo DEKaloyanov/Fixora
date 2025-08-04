@@ -34,6 +34,15 @@ if ($action === 'accept') {
     $insert = $conn->prepare("INSERT INTO connections (user1_id, user2_id, job_id) VALUES (?, ?, ?)");
     $insert->execute([$user_id, $request['sender_id'], $job_id]);
 
+    // ✅ Създаване на запис в project_status (ако още не съществува)
+    $check = $conn->prepare("SELECT COUNT(*) FROM project_status WHERE job_id = ? AND ((user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?))");
+    $check->execute([$job_id, $user_id, $request['sender_id'], $request['sender_id'], $user_id]);
+
+    if ($check->fetchColumn() == 0) {
+        $insertStatus = $conn->prepare("INSERT INTO project_status (job_id, user1_id, user2_id) VALUES (?, ?, ?)");
+        $insertStatus->execute([$job_id, $user_id, $request['sender_id']]);
+    }
+
     // Обновяване на заявката
     $update = $conn->prepare("UPDATE connection_requests SET status = 'accepted' WHERE id = ?");
     $update->execute([$request_id]);
@@ -45,6 +54,8 @@ if ($action === 'accept') {
     // Пренасочване
     header("Location: ../chat.php?with=" . $request['sender_id'] . "&job=" . $job_id);
     exit;
+
+
 
 } else {
     // Ако е отказана – просто обновяваме статуса
