@@ -1,6 +1,9 @@
 <?php
 session_start();
 require 'db.php';
+require_once 'rating_utils.php';
+
+
 ?>
 <!DOCTYPE html>
 <html lang="bg">

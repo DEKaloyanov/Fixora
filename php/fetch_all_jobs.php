@@ -1,5 +1,7 @@
 <?php
 require 'db.php';
+require_once 'rating_utils.php';
+
 
 $typeFilter = $_GET['type'] ?? '';
 $professionFilter = $_GET['profession'] ?? '';
@@ -28,6 +30,10 @@ foreach ($jobs as $job) {
     echo '<a class="job-card" href="job_details.php?id=' . $job['id'] . '">';
     echo '<img class="job-card-img" src="../' . htmlspecialchars($cover) . '" alt="Снимка">';
     echo '<div class="job-card-info">';
+    echo '<div class="job-rating">';
+    echo getJobAverageRating($job['id'], true);
+    echo '</div>';
+
     echo '<h3>' . htmlspecialchars($job['profession']) . '</h3>';
     echo '<p><strong>Град:</strong> ' . htmlspecialchars($job['location'] ?? $job['city']) . '</p>';
     echo '<p><strong>Цена на ден:</strong> ' . ($job['price_per_day'] ? $job['price_per_day'] . ' лв' : '-') . '</p>';

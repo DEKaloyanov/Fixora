@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'db.php';
+require_once 'rating_utils.php';
 
 if (!isset($_SESSION['user'])) {
     http_response_code(401);
@@ -56,7 +57,7 @@ foreach ($jobs as $job) {
     echo '  </div>';
 
     echo '  <div class="job-details">';
-    
+
     // Мапване на професиите към кирилица
     $professionMap = [
         'boqjdiq' => 'Бояджия',
@@ -104,6 +105,10 @@ foreach ($jobs as $job) {
     }
 
     echo '    <a href="edit_job.php?id=' . $job['id'] . '" class="button edit-btn">Редактирай</a>';
+    echo '    <div class="job-rating">';
+    echo getJobAverageRating($job['id'], true);
+    echo '    </div>';
+
     echo '  </div>';
     echo '</div>';
 }

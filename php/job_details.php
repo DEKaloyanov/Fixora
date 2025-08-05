@@ -1,12 +1,16 @@
 <?php
 require 'db.php';
+require_once 'rating_utils.php';
 
-if (!isset($_GET['id'])) {
+
+$job_id = $_GET['id'] ?? $_GET['job_id'] ?? null;
+
+if (!$job_id) {
     echo "Липсва ID на обявата.";
     exit;
 }
+$id = (int)$job_id;
 
-$id = (int) $_GET['id'];
 
 $stmt = $conn->prepare("SELECT j.*, u.username FROM jobs j JOIN users u ON j.user_id = u.id WHERE j.id = ?");
 $stmt->execute([$id]);
@@ -78,7 +82,7 @@ $images = json_decode($job['images'], true);
         if (!$existing) {
             echo '<form action="send_request.php" method="POST" style="margin-top: 20px;">
                     <input type="hidden" name="job_id" value="' . $job['id'] . '">
-                    <input type="hidden" name="receiver_id" value="' . $job['user_id'] . '">
+                    <input type="hidden" name="owner_id" value="' . $job['user_id'] . '">
                     <button type="submit" style="padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px;">
                         📩 Интересувам се
                     </button>
@@ -88,6 +92,26 @@ $images = json_decode($job['images'], true);
         }
     }
     ?>
+
+        <hr>
+    <h3>⭐ Оценки и коментари:</h3>
+    <?php
+        $ratings = getRatingsForJob($job['id']);
+        if (count($ratings) === 0) {
+            echo "<p>Все още няма оценки за тази обява.</p>";
+        } else {
+            foreach ($ratings as $r) {
+                echo '<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">';
+                echo '<strong>' . htmlspecialchars($r['ime'] . ' ' . $r['familiq']) . '</strong><br>';
+                echo number_format($r['rating'], 2) . ' / 5<br>';
+                if (!empty($r['comment'])) {
+                    echo '<em>' . nl2br(htmlspecialchars($r['comment'])) . '</em>';
+                }
+                echo '</div>';
+            }
+        }
+    ?>
+
 
 </div>
 

@@ -10,7 +10,7 @@ body {
 }
 
 main {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 20px auto;
     padding: 20px;
     /*background: rgb(255, 255, 255);
@@ -143,7 +143,7 @@ main {
 .main-buttons {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 15px;
   position: relative;
   z-index: 2;
 }
@@ -167,7 +167,7 @@ main {
   position: absolute;
   top: 0;
   display: flex;
-  gap: 20px;
+  gap: 15px;
   opacity: 0;
   pointer-events: none;
   transition: transform 0.15s ease, opacity 0.15s ease;
@@ -191,7 +191,7 @@ main {
 
 /* Подменю отляво (плъзгане наляво от „Всички обяви“) */
 .job-sub-buttons.all {
-  right: calc(65.5% + 1px);
+  right: calc(70% + 1px);
   transform: translateX(53%);
 }
 
@@ -203,7 +203,7 @@ main {
 
 /* Подменю отдясно (плъзгане надясно от „Добави обява“) */
 .job-sub-buttons.add {
-  left: calc(65.5% + 1px);
+  left: calc(70% + 1px);
   transform: translateX(-53%);
 }
 
