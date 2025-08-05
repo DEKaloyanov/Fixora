@@ -8,6 +8,17 @@ function loadJobs(type = '') {
         .then(html => {
             document.getElementById('jobList').innerHTML = html;
             document.getElementById('jobFormContainer').innerHTML = '';
+            
+            // Добавяне на икони към мета данните
+            document.querySelectorAll('.job-meta-item.location').forEach(el => {
+                el.innerHTML = `<i class="fas fa-map-marker-alt"></i>${el.textContent}`;
+            });
+            document.querySelectorAll('.job-meta-item.price-day').forEach(el => {
+                el.innerHTML = `<i class="fas fa-coins"></i>${el.textContent}`;
+            });
+            document.querySelectorAll('.job-meta-item.price-square').forEach(el => {
+                el.innerHTML = `<i class="fas fa-ruler-combined"></i>${el.textContent}`;
+            });
         })
         .catch(err => console.error('Грешка при зареждане на обяви:', err));
 }

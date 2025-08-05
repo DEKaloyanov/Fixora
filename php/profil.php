@@ -22,6 +22,7 @@ $current_user_id = $user['id'];
     <meta charset="UTF-8">
     <title>Моят Профил - Fixora</title>
     <link rel="stylesheet" href="../css/profil.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
 
@@ -30,8 +31,13 @@ $current_user_id = $user['id'];
         <div class="profile-container">
             <!--<div class="profile-container">-->
             <div class="profile-left">
-                <img src="<?php echo !empty($user['profile_image']) ? '../uploads/' . $user['profile_image'] : '../img/default-user.png'; ?>"
-                    class="profile-image" alt="Профилна снимка">
+                <?php
+                $profileImage = !empty($user['profile_image']) && file_exists('../uploads/' . $user['profile_image'])
+                    ? '../uploads/' . $user['profile_image']
+                    : '../img/default-person.png';
+                ?>
+                <img src="<?= htmlspecialchars($profileImage) ?>" class="profile-image" alt="Профилна снимка">
+                
             </div>
             <div class="profile-info">
                 <p><span class="label">Потребителско име:</span> <span
@@ -93,8 +99,13 @@ $current_user_id = $user['id'];
                 <h3>Заявки за свързване:</h3>
                 <?php foreach ($requests as $req): ?>
                     <div class="request-card">
-                        <img src="<?php echo !empty($req['profile_image']) ? '../uploads/' . htmlspecialchars($req['profile_image']) : '../img/default-user.png'; ?>"
-                            alt="Профил" class="avatar">
+                        <?php
+                        $requestImage = !empty($req['profile_image']) && file_exists('../uploads/' . $req['profile_image'])
+                            ? '../uploads/' . $req['profile_image']
+                            : '../img/default-person.png';
+                        ?>
+                        <img src="<?= htmlspecialchars($requestImage) ?>" alt="Профил" class="avatar">
+                        alt="Профил" class="avatar">
                         <span><?php echo htmlspecialchars($req['ime'] . ' ' . $req['familiq']); ?></span>
                         <form action="approve_request.php" method="post" style="display: inline;">
                             <input type="hidden" name="request_id" value="<?php echo $req['id']; ?>">
@@ -152,7 +163,8 @@ $current_user_id = $user['id'];
                     : (($project['user2_id'] == $current_user_id && $project['user1_id'] != $current_user_id)
                         ? $project['user1_id']
                         : null);
-                        if (is_null($other_user_id)) continue;
+                if (is_null($other_user_id))
+                    continue;
                 $other_user_name = ($project['user1_id'] == $current_user_id)
                     ? $project['user2_ime'] . ' ' . $project['user2_familiq']
                     : $project['user1_ime'] . ' ' . $project['user1_familiq'];
@@ -363,4 +375,5 @@ $current_user_id = $user['id'];
     </script>
     <script src="../js/profil.js?v=<?php echo time(); ?>"></script>
 </body>
+
 </html>

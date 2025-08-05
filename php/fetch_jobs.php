@@ -42,13 +42,14 @@ foreach ($jobs as $job) {
     if ($job['job_type'] === 'seek') {
         $image = $userImages[$job['user_id']] ?? '../img/default-user.png';
     } else {
-        $image = '../img/no-image.png';
-        if (!empty($job['images'])) {
-            $images = json_decode($job['images'], true);
-            if (is_array($images) && !empty($images[0])) {
-                $image = '../' . htmlspecialchars($images[0]);
-            }
+        $images = json_decode($job['images'], true);
+        if (is_array($images) && !empty($images[0])) {
+            $image = '../' . htmlspecialchars($images[0]);
+        } else {
+            $image = '../img/default-jobs.png';
         }
+
+
     }
 
     echo '<div class="job-card" onclick="location.href=\'job_details.php?id=' . $job['id'] . '\'">';
