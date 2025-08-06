@@ -1,6 +1,7 @@
 <?php
 require 'db.php';
 require_once 'rating_utils.php';
+session_start();
 
 
 $typeFilter = $_GET['type'] ?? '';
@@ -37,11 +38,11 @@ foreach ($jobs as $job) {
         if (!empty($user['profile_image']) && file_exists(__DIR__ . '/../uploads/' . $user['profile_image'])) {
             $cover = 'uploads/' . $user['profile_image'];
         } else {
-            $cover = 'img/default-person.png';
+            $cover = 'img/ChatGPT Image Aug 6, 2025, 03_15_39 PM.png';
         }
     } else {
         // За обяви тип "offer" – ползваме качена снимка или снимка по подразбиране
-        $cover = (!empty($images) && !empty($images[0])) ? $images[0] : 'img/default-jobs.png';
+        $cover = (!empty($images) && !empty($images[0])) ? $images[0] : 'img/ChatGPT Image Aug 6, 2025, 03_15_37 PM.png';
     }
 
     // Генерираме HTML
@@ -51,6 +52,20 @@ foreach ($jobs as $job) {
     echo '<div class="job-rating">';
     echo getJobAverageRating($job['id'], true);
     echo '</div>';
+
+    // Любими – визуализация със сърце
+    require_once 'favorites_utils.php';
+    
+    if (isset($_SESSION['user'])) {
+        $isFavorite = isJobFavorite($conn, $_SESSION['user']['id'], $job['id']);
+        $heartIcon = $isFavorite ? 'img/heart-filled.png' : 'img/heart-outline.png';
+        $heartAlt = $isFavorite ? 'Премахни от любими' : 'Добави в любими';
+
+        echo '<div class="favorite-icon" onclick="toggleFavorite(event, ' . $job['id'] . ')">';
+        echo '<img src="' . $heartIcon . '" alt="' . $heartAlt . '" title="' . $heartAlt . '" data-job-id="' . $job['id'] . '">';
+        echo '</div>';
+    }
+
     echo '<h3>' . htmlspecialchars($job['profession']) . '</h3>';
     echo '<p><strong>Град:</strong> ' . htmlspecialchars($job['location'] ?? $job['city']) . '</p>';
     echo '<p><strong>Цена на ден:</strong> ' . ($job['price_per_day'] ? $job['price_per_day'] . ' лв' : '-') . '</p>';

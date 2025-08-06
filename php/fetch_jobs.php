@@ -46,18 +46,18 @@ foreach ($jobs as $job) {
         if (is_array($images) && !empty($images[0])) {
             $image = '../' . htmlspecialchars($images[0]);
         } else {
-            $image = '../img/default-jobs.png';
+            $image = '../img/ChatGPT Image Aug 6, 2025, 03_15_37 PM.png';
         }
 
 
     }
 
-    echo '<div class="job-card" onclick="location.href=\'job_details.php?id=' . $job['id'] . '\'">';
+    echo '<div class="job-card" data-job-id="' . $job['id'] . '">';
     echo '  <div class="job-image">';
     echo '    <img src="' . $image . '" alt="Обява">';
     echo '  </div>';
 
-    echo '  <div class="job-details">';
+    echo '  <div class="job-details" style="position: relative;">';
 
     // Мапване на професиите към кирилица
     $professionMap = [
@@ -106,9 +106,25 @@ foreach ($jobs as $job) {
     }
 
     echo '    <a href="edit_job.php?id=' . $job['id'] . '" class="button edit-btn">Редактирай</a>';
-    echo '    <div class="job-rating">';
+
+    // Визуализация на рейтинг
+    echo '<div class="job-rating">';
     echo getJobAverageRating($job['id'], true);
-    echo '    </div>';
+    echo '</div>';
+
+    // Сърце за любими (контур или запълнено)
+    require_once 'favorites_utils.php';
+    if (isset($_SESSION['user'])) {
+        $isFavorite = isJobFavorite($conn, $_SESSION['user']['id'], $job['id']);
+        $heartIcon = $isFavorite ? '../img/heart-filled.png' : '../img/heart-outline.png';
+        $heartAlt = $isFavorite ? 'Премахни от любими' : 'Добави в любими';
+        echo '<div class="favorite-icon">';
+echo '<img src="' . $heartIcon . '" alt="' . $heartAlt . '" title="' . $heartAlt . '" data-job-id="' . $job['id'] . '" class="favorite-heart">';
+echo '</div>';
+
+
+    }
+
 
     echo '  </div>';
     echo '</div>';

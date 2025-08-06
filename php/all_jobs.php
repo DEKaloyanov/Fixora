@@ -115,5 +115,6 @@ document.getElementById('filterType').addEventListener('change', loadAllJobs);
 document.getElementById('filterProfession').addEventListener('change', loadAllJobs);
 document.addEventListener('DOMContentLoaded', loadAllJobs);
 </script>
+<script src="/Fixora/js/favorites.js"></script>
 </body>
 </html>

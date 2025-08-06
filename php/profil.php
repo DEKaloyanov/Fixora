@@ -23,6 +23,8 @@ $current_user_id = $user['id'];
     <title>Моят Профил - Fixora</title>
     <link rel="stylesheet" href="../css/profil.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+
 
 </head>
 
@@ -34,7 +36,7 @@ $current_user_id = $user['id'];
                 <?php
                 $profileImage = !empty($user['profile_image']) && file_exists('../uploads/' . $user['profile_image'])
                     ? '../uploads/' . $user['profile_image']
-                    : '../img/default-person.png';
+                    : '../img/ChatGPT Image Aug 6, 2025, 03_15_39 PM.png';
                 ?>
                 <img src="<?= htmlspecialchars($profileImage) ?>" class="profile-image" alt="Профилна снимка">
                 
@@ -102,7 +104,7 @@ $current_user_id = $user['id'];
                         <?php
                         $requestImage = !empty($req['profile_image']) && file_exists('../uploads/' . $req['profile_image'])
                             ? '../uploads/' . $req['profile_image']
-                            : '../img/default-person.png';
+                            : '../img/ChatGPT Image Aug 6, 2025, 03_15_39 PM.png';
                         ?>
                         <img src="<?= htmlspecialchars($requestImage) ?>" alt="Профил" class="avatar">
                         alt="Профил" class="avatar">
@@ -374,6 +376,7 @@ $current_user_id = $user['id'];
 
     </script>
     <script src="../js/profil.js?v=<?php echo time(); ?>"></script>
+    <script src="/Fixora/js/favorites.js"></script>
 </body>
 
 </html>

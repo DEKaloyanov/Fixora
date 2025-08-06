@@ -234,6 +234,7 @@ main {
 
 /* Обява в списъка */
 .job-card {
+    position: relative;
     border: 1px solid #ccc;
     border-radius: 6px;
     padding: 15px;
@@ -453,3 +454,21 @@ footer {
 }
 
 
+.favorite-icon {
+  position: absolute;
+  top: 10px;
+  right: -50px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.favorite-icon img {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.favorite-icon img:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}

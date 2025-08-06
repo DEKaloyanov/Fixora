@@ -1,0 +1,48 @@
+.admin-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tabs a {
+    padding: 10px 15px;
+    background: #eee;
+    text-decoration: none;
+    color: #333;
+    border-radius: 6px;
+}
+
+.tabs a.active {
+    background: #002147;
+    color: white;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-bar input[type="text"] {
+    padding: 8px;
+    width: 250px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
