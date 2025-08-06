@@ -1,0 +1,115 @@
+
+/* Основна стилизация */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url("../img/FON=FIXORA.png");
+    background-size: cover;
+    background-repeat: repeat;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+}
+
+main, .jobs-wrapper {
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    justify-content: center;
+}
+
+.filters select {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.job-card {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    padding: 15px;
+    align-items: center;
+    transition: box-shadow 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.job-card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.job-card-img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.job-card-info {
+    flex: 1;
+}
+
+.job-card-info h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: #002147;
+}
+
+.job-card-info p {
+    margin: 4px 0;
+    font-size: 15px;
+    color: #333;
+}
+
+.edit-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #002147;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+    background-color: #004080;
+}
+
+.favorite-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.favorite-icon img {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.favorite-icon img:hover {
+    transform: scale(1.2);
+}
+
+.job-rating {
+    margin-bottom: 6px;
+}

@@ -1,8 +1,8 @@
 <?php
 require 'db.php';
 require_once 'rating_utils.php';
+require_once 'favorites_utils.php';
 session_start();
-
 
 $typeFilter = $_GET['type'] ?? '';
 $professionFilter = $_GET['profession'] ?? '';
@@ -28,48 +28,52 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 foreach ($jobs as $job) {
     $images = json_decode($job['images'], true);
 
-    // Ако е от тип "seek" – използваме профилната снимка на потребителя
+    // Определяме изображение
     if ($job['job_type'] === 'seek') {
         $stmtUser = $conn->prepare("SELECT profile_image FROM users WHERE id = ?");
         $stmtUser->execute([$job['user_id']]);
         $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
-        // Проверяваме дали има снимка и дали съществува реално във файловата система
-        if (!empty($user['profile_image']) && file_exists(__DIR__ . '/../uploads/' . $user['profile_image'])) {
-            $cover = 'uploads/' . $user['profile_image'];
-        } else {
-            $cover = 'img/ChatGPT Image Aug 6, 2025, 03_15_39 PM.png';
-        }
+        $cover = (!empty($user['profile_image']) && file_exists(__DIR__ . '/../uploads/' . $user['profile_image']))
+            ? 'uploads/' . $user['profile_image']
+            : 'img/ChatGPT Image Aug 6, 2025, 03_15_39 PM.png';
     } else {
-        // За обяви тип "offer" – ползваме качена снимка или снимка по подразбиране
-        $cover = (!empty($images) && !empty($images[0])) ? $images[0] : 'img/ChatGPT Image Aug 6, 2025, 03_15_37 PM.png';
+        $cover = (!empty($images) && !empty($images[0]))
+            ? $images[0]
+            : 'img/ChatGPT Image Aug 6, 2025, 03_15_37 PM.png';
     }
 
-    // Генерираме HTML
-    echo '<a class="job-card" href="job_details.php?id=' . $job['id'] . '">';
-    echo '<img class="job-card-img" src="../' . htmlspecialchars($cover) . '" alt="Снимка">';
-    echo '<div class="job-card-info">';
-    echo '<div class="job-rating">';
-    echo getJobAverageRating($job['id'], true);
-    echo '</div>';
+    // Започваме картата
+    echo '<div class="job-card" onclick="handleCardClick(event, ' . $job['id'] . ')">';
 
-    // Любими – визуализация със сърце
-    require_once 'favorites_utils.php';
-    
+    // Любими – само ако е логнат
     if (isset($_SESSION['user'])) {
         $isFavorite = isJobFavorite($conn, $_SESSION['user']['id'], $job['id']);
-        $heartIcon = $isFavorite ? 'img/heart-filled.png' : 'img/heart-outline.png';
+        $heartIcon = $isFavorite ? '../img/heart-filled.png' : '../img/heart-outline.png';
         $heartAlt = $isFavorite ? 'Премахни от любими' : 'Добави в любими';
 
-        echo '<div class="favorite-icon" onclick="toggleFavorite(event, ' . $job['id'] . ')">';
-        echo '<img src="' . $heartIcon . '" alt="' . $heartAlt . '" title="' . $heartAlt . '" data-job-id="' . $job['id'] . '">';
-        echo '</div>';
+        echo '<div class="favorite-icon">';
+echo '<img src="' . $heartIcon . '" alt="' . $heartAlt . '" title="' . $heartAlt . '" data-job-id="' . $job['id'] . '" class="favorite-heart' . ($isFavorite ? ' favorited' : '') . '">';
+echo '</div>';
+
     }
 
+
+    echo '<img class="job-card-img" src="../' . htmlspecialchars($cover) . '" alt="Снимка">';
+
+    echo '<div class="job-card-info">';
+    echo '<div class="job-rating">' . getJobAverageRating($job['id'], true) . '</div>';
     echo '<h3>' . htmlspecialchars($job['profession']) . '</h3>';
     echo '<p><strong>Град:</strong> ' . htmlspecialchars($job['location'] ?? $job['city']) . '</p>';
     echo '<p><strong>Цена на ден:</strong> ' . ($job['price_per_day'] ? $job['price_per_day'] . ' лв' : '-') . '</p>';
     echo '<p><strong>Цена/кв.м:</strong> ' . ($job['price_per_square'] ? $job['price_per_square'] . ' лв' : '-') . '</p>';
-    echo '</div></a>';
-}
+    echo '</div>'; // .job-card-info
+    if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $job['user_id']) {
+        echo '<form method="GET" action="../php/edit_job.php" onClick="event.stopPropagation();">';
+        echo '<input type="hidden" name="id" value="' . $job['id'] . '">';
+        echo '<button type="submit" class="edit-btn">Редактирай</button>';
+        echo '</form>';
+    }
 
+    echo '</div>'; // .job-card
+}

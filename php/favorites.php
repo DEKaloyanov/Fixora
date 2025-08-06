@@ -95,7 +95,8 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $profession = htmlspecialchars($job['profession']);
             $location = $job['city'] ?? $job['location'] ?? '-';
             ?>
-            <a class="job-card" href="job_details.php?id=<?= $job['id'] ?>">
+            <div class="job-card" onclick="handleCardClick(event, <?= $job['id'] ?>)">
+
                 <img class="job-card-img" src="../<?= htmlspecialchars($cover) ?>" alt="Снимка">
                 <div class="job-card-info">
                     <div class="job-rating">
@@ -106,9 +107,25 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p><strong>Цена на ден:</strong> <?= $job['price_per_day'] ? $job['price_per_day'] . ' лв' : '-' ?></p>
                     <p><strong>Цена/кв.м:</strong> <?= $job['price_per_square'] ? $job['price_per_square'] . ' лв' : '-' ?></p>
                 </div>
-            </a>
+    
+            </div>
+
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
+<script>
+function handleCardClick(event, jobId) {
+  const target = event.target;
+
+  // Ако кликваме върху сърце или бутон за редакция – не правим нищо
+  if (target.closest('.favorite-icon') || target.closest('.edit-button')) {
+    return;
+  }
+
+  // Иначе отваряме страницата с детайли
+  window.location.href = 'job_details.php?id=' + jobId;
+}
+</script>
+
 </body>
 </html>
