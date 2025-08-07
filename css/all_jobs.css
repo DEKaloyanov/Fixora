@@ -2,13 +2,16 @@
 /* Основна стилизация */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-image: url("../img/FON=FIXORA.png");
-    background-size: cover;
+    background-image: url("../img/Abstract Blue Geometric Pattern.png");
+    background-size: 2000px 2000px; /* по-малка, за да е нарядко */
     background-repeat: repeat;
-    background-position: center;
+    background-position:center;
+ /* остава на място при скрол */
+    background-color: #f4f4f4; /* резервен цвят при бавен интернет */
     margin: 0;
     padding: 0;
 }
+
 
 main, .jobs-wrapper {
     max-width: 1300px;
