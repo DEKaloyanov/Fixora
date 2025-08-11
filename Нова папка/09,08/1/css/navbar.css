@@ -1,0 +1,295 @@
+/* Хедър и навигация */
+header {
+  background-color: #ffffff ;
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 4px solid rgb(84, 105, 135);
+  position: sticky;
+  top: 0;
+}
+
+.logo-small {
+  height: 40px;
+  cursor: pointer;
+}
+
+.navbar {
+  list-style:none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar li a {
+  text-decoration: none;
+  color: rgb(31, 67, 101);
+  font:icon;
+  padding: 10px 10px;
+  font-weight: bold;
+  font-size: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease;
+  z-index: 1;
+}
+
+
+
+
+.navbar li a::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 130%;
+  background: radial-gradient(circle, rgba(84, 105, 135, 0.4) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0);
+  /*transition: transform 0.5s ease;*/
+  border-radius: 80%;
+  z-index: 0;
+}
+
+.navbar li a:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.navbar li a span,
+.navbar li a i,
+.navbar li a {
+  position: relative;
+  z-index: 1;
+}
+
+
+.navbar li a.button {
+      padding: 10px;
+      padding-right: 40px;
+      border-radius: 5px;
+      background-color: #1f4365;
+      color: rgba(255, 255, 255, 0.781);
+      text-decoration: none;
+    }
+
+    .navbar li a.button::before {
+  display: none !important;
+}
+
+
+    .navbar li a.button:hover {
+      background-color: #274e7a;
+    }
+
+
+
+
+/* Existing styles... */
+
+/* Dropdown Styles */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px); /* малък отстояние под бутона */
+  right: 0;
+  left: auto;
+  max-width: 220px; /* ограничаваме максималната ширина */
+  width: max-content; /* менюто да е толкова широко, колкото съдържанието */
+  transform: translateY(-10px);
+  background-color: #fff;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-menu li {
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid #f0f0f0;
+
+}
+
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-align: left;
+  margin: 0;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f8f9fa;
+  color: #1f4365;
+}
+
+/* Add a small arrow to the dropdown toggle */
+.dropdown-toggle::after {
+  content: "▼";
+  font-size: 0.6em;
+  margin-left: 5px;
+  vertical-align: middle;
+  transition: transform 0.3s ease;
+}
+
+.dropdown:hover .dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+
+/* Animation for dropdown items */
+.dropdown-menu li {
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu li {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Staggered animation for dropdown items */
+.dropdown-menu li:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.dropdown-menu li:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.dropdown-menu li:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+
+
+
+
+/* Toast за вход */
+.login-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px 20px;
+  border-left: 5px solid #28a745;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+/* Модали */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex; /* ⚠️ Добавено */
+  justify-content: center; /* ⚠️ Добавено */
+  align-items: center;     /* ⚠️ Добавено */
+}
+
+
+.modal-content {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+}
+
+.modal-content form input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.modal-content button {
+  background-color: #1f4365;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.modal-content button:hover {
+  background-color: #1f4365;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Замъгляване */
+#overlay {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+@keyframes pulse-fav {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  50% {
+    transform: scale(1.2);
+    color: #f45b69;
+  }
+  100% {
+    transform: scale(1);
+    color: inherit;
+  }
+}
+
+.animate-favorite {
+  animation: pulse-fav 0.6s ease-in-out;
+  color: #f45b69 !important;
+}
