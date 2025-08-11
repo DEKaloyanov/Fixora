@@ -156,3 +156,8 @@ body{
 }
 
 .hint{ color:var(--muted); font-size:13px; }
+
+.alert{padding:12px 14px;border-radius:10px;margin:10px 0;font-weight:600}
+.alert.error{background:#ffe9e9;color:#9b1c1c;border:1px solid #f7c8c8}
+.alert.success{background:#e8f6ed;color:#196c3a;border:1px solid #c7ebd3}
+

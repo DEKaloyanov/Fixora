@@ -77,5 +77,11 @@ $stmt->execute([
     'images' => $imageJSON
 ]);
 
+$cover_index = isset($_POST['cover_index']) ? (int)$_POST['cover_index'] : 0;
+// Файловете вече идват в желан ред (чрез DataTransfer).
+// При запис в БД/файлова система маркирай като "корица" този с индекс $cover_index.
+// Пример: ако имаш jobs_images таблица — за снимката с този индекс сложи is_cover = 1.
+
+
 header("Location: profil.php");
 exit;
