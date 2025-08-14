@@ -116,3 +116,36 @@ main, .jobs-wrapper {
 .job-rating {
     margin-bottom: 6px;
 }
+.filters label { 
+  background:#fff; border:1px solid #ccc; border-radius:8px; padding:8px 12px;
+}
+#professionFilter { max-width: 360px; }
+
+
+.badge-company{
+  display:inline-block;
+  margin-right:8px;
+  padding:2px 8px;
+  font-size:12px;
+  background:#1f4365;
+  color:#fff;
+  border-radius:999px;
+  vertical-align:middle;
+}
+.profession-chips{
+  margin:6px 0 8px 0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.profession-chips .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  background:#eef2f7;
+  border:1px solid #d6deea;
+  border-radius:999px;
+  font-size:13px;
+  color:#1f4365;
+}

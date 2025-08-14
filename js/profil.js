@@ -25,215 +25,234 @@ function loadJobs(type = '') {
 
 // ======================= ФОРМА ЗА ДОБАВЯНЕ =======================
 function loadJobForm(type) {
-    const jobList = document.getElementById('jobList');
-    const formBox = document.getElementById('jobFormContainer');
+    var jobList = document.getElementById('jobList');
+    var formBox = document.getElementById('jobFormContainer');
     jobList.innerHTML = '';
     formBox.style.display = 'block';
 
-    const formHTML = (type === 'offer') ? `
-<form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">
-  <input type="hidden" name="job_type" value="offer">
+    var formHTML;
+    if (type === 'offer') {
+        formHTML =
+        '<form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">' +
+          '<input type="hidden" name="job_type" value="offer">' +
 
-  <label>Тип работа:</label>
-  <select name="profession" required>
-    <option value="">Избери тип работа</option>
-  </select>
+          '<div class="company-switch">' +
+            '<label><input type="checkbox" id="is_company" name="is_company" value="1"> Фирма (работите по няколко професии)</label>' +
+          '</div>' +
 
-  <label>Населено място:</label>
-  <input type="text" name="location" required placeholder="Изберете град">
+          '<div id="single-profession-block">' +
+            '<label>Тип работа:</label>' +
+            '<select name="profession" id="profession_single" required>' +
+              '<option value="">Избери тип работа</option>' +
+            '</select>' +
+          '</div>' +
 
-  <label>Надник:</label>
-  <input type="number" name="price_per_day" placeholder="Въведете надник">
+          '<div id="multi-profession-block" style="display:none">' +
+            '<label>Професии (до 10):</label>' +
+            '<input type="text" id="prof-search" placeholder="Търси професия...">' +
+            '<div id="prof-suggestions" class="prof-suggestions"></div>' +
+            '<div id="prof-chips" class="chips"></div>' +
+            '<input type="hidden" name="professions_json" id="professions_json">' +
+          '</div>' +
 
-  <label>Цена на квадрат:</label>
-  <input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">
+          '<label>Населено място:</label>' +
+          '<input type="text" name="location" required placeholder="Изберете град">' +
 
-  <!-- Image Manager -->
-  <div class="images-field">
-    <label>Снимки:</label>
-    <input type="file" id="jobImagesInput" name="images[]" accept="image/*" multiple style="display:none">
-    <div class="images-toolbar">
-      <button type="button" id="btnPickImages" class="btn-small">Добави снимки</button>
-      <span class="images-hint">Плъзни, за да подредиш. Кликни ★ за корица.</span>
-    </div>
-    <div id="imagesGrid" class="images-grid" data-empty="Пусни снимки тук"></div>
-    <input type="hidden" name="cover_index" id="cover_index" value="0">
-  </div>
+          '<label>Надник:</label>' +
+          '<input type="number" name="price_per_day" placeholder="Въведете надник">' +
 
-  <label>Описание:</label>
-  <textarea name="description" placeholder="Описание (незадължително)"></textarea>
+          '<label>Цена на квадрат:</label>' +
+          '<input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">' +
 
-  <button type="submit">Запази обявата</button>
-</form>
-` : `
-<form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">
-  <input type="hidden" name="job_type" value="seek">
+          '<div class="images-field">' +
+            '<label>Снимки:</label>' +
+            '<input type="file" id="jobImagesInput" name="images[]" accept="image/*" multiple style="display:none">' +
+            '<div class="images-toolbar">' +
+              '<button type="button" id="btnPickImages" class="btn-small">Добави снимки</button>' +
+              '<span class="images-hint">Плъзни, за да подредиш. Кликни ★ за корица.</span>' +
+            '</div>' +
+            '<div id="imagesGrid" class="images-grid" data-empty="Пусни снимки тук"></div>' +
+            '<input type="hidden" name="cover_index" id="cover_index" value="0">' +
+          '</div>' +
 
-  <label>Тип работа:</label>
-  <select name="profession" required>
-    <option value="">Избери тип работа</option>
-  </select>
+          '<label>Описание:</label>' +
+          '<textarea name="description" placeholder="Описание (незадължително)"></textarea>' +
 
-  <label>Населено място:</label>
-  <input type="text" name="city" required placeholder="Изберете град">
+          '<button type="submit">Запази обявата</button>' +
+        '</form>';
+    } else {
+        formHTML =
+        '<form class="job-form" id="jobForm" action="save_job.php" method="POST" enctype="multipart/form-data">' +
+          '<input type="hidden" name="job_type" value="seek">' +
 
-  <label>Брой работници:</label>
-  <input type="number" name="team_size" id="teamSize" min="1" max="20" value="1" required>
-  <div id="teamMemberFields"></div>
+          '<div class="company-switch">' +
+            '<label><input type="checkbox" id="is_company" name="is_company" value="1"> Фирма (работите по няколко професии)</label>' +
+          '</div>' +
 
-  <label>Надник:</label>
-  <input type="number" name="price_per_day" placeholder="Въведете надник">
+          '<div id="single-profession-block">' +
+            '<label>Тип работа:</label>' +
+            '<select name="profession" id="profession_single" required>' +
+              '<option value="">Избери тип работа</option>' +
+            '</select>' +
+          '</div>' +
 
-  <label>Цена на квадрат:</label>
-  <input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">
+          '<div id="multi-profession-block" style="display:none">' +
+            '<label>Професии (до 10):</label>' +
+            '<input type="text" id="prof-search" placeholder="Търси професия...">' +
+            '<div id="prof-suggestions" class="prof-suggestions"></div>' +
+            '<div id="prof-chips" class="chips"></div>' +
+            '<input type="hidden" name="professions_json" id="professions_json">' +
+          '</div>' +
 
-  <label>Описание:</label>
-  <textarea name="description" placeholder="Описание (незадължително)"></textarea>
+          '<label>Населено място:</label>' +
+          '<input type="text" name="city" required placeholder="Изберете град">' +
 
-  <button type="submit">Запази обявата</button>
-</form>
-`;
+          '<label>Брой работници:</label>' +
+          '<input type="number" name="team_size" id="teamSize" min="1" max="20" value="1" required>' +
+          '<div id="teamMemberFields"></div>' +
+
+          '<label>Надник:</label>' +
+          '<input type="number" name="price_per_day" placeholder="Въведете надник">' +
+
+          '<label>Цена на квадрат:</label>' +
+          '<input type="number" name="price_per_square" placeholder="Въведете цена за квадрат">' +
+
+          '<label>Описание:</label>' +
+          '<textarea name="description" placeholder="Описание (незадължително)"></textarea>' +
+
+          '<button type="submit">Запази обявата</button>' +
+        '</form>';
+    }
 
     formBox.innerHTML = formHTML;
 
-    // Напълни падащото меню с професии (централизиран файл)
-    const selectProfession = document.querySelector('#jobFormContainer select[name="profession"]');
-    if (selectProfession) {
-        fetch('professions_json.php')   // файлът е в същата папка като profil.php
-            .then(r => r.json())
-            .then(items => {
-                selectProfession.querySelectorAll('option:not(:first-child)').forEach(o => o.remove());
-                items.forEach(it => {
-                    const opt = document.createElement('option');
-                    opt.value = it.key;
-                    opt.textContent = it.label;
-                    selectProfession.appendChild(opt);
-                });
-            })
-            .catch(console.error);
+    // 1) Пълним единичния select от централизиран JSON
+    var singleSelect = document.getElementById('profession_single');
+    if (singleSelect) {
+        fetch('professions_json.php')
+          .then(function(r){ return r.json(); })
+          .then(function(items){
+              singleSelect.querySelectorAll('option:not(:first-child)').forEach(function(o){ o.remove(); });
+              items.forEach(function(it){
+                  var opt = document.createElement('option');
+                  opt.value = it.key;
+                  opt.text  = it.label;
+                  singleSelect.appendChild(opt);
+              });
+          })
+          .catch(console.error);
     }
 
-    // Допълнителни полета за "seek"
+    // 2) Multi-select UI за фирми
+    initCompanyMultiUI();
+
+    // 3) Доп. полета при "seek"
     if (type === 'seek') {
-        const teamSize = document.getElementById('teamSize');
-        const container = document.getElementById('teamMemberFields');
+        var teamSize  = document.getElementById('teamSize');
+        var container = document.getElementById('teamMemberFields');
         teamSize.addEventListener('input', function () {
             container.innerHTML = '';
-            for (let i = 1; i <= this.value; i++) {
-                container.innerHTML += `<input type="text" name="team_member_${i}" placeholder="Име на работник ${i}" required>`;
+            for (var i = 1; i <= parseInt(this.value || '1', 10); i++) {
+                var inp = document.createElement('input');
+                inp.type = 'text';
+                inp.name = 'team_member_' + i;
+                inp.placeholder = 'Име на работник ' + i;
+                inp.required = true;
+                container.appendChild(inp);
             }
         });
-        return; // няма image manager в тази форма
+        // няма image manager в тази форма
+        return;
     }
 
-    // ======================= Image Manager (само за "offer") =======================
-    const input = document.getElementById('jobImagesInput');
-    const grid = document.getElementById('imagesGrid');
-    const btnPick = document.getElementById('btnPickImages');
-    const coverHidden = document.getElementById('cover_index');
-    const form = document.getElementById('jobForm');
+    // 4) Image manager (само при "offer", както до момента)
+    var input = document.getElementById('jobImagesInput');
+    var grid  = document.getElementById('imagesGrid');
+    var btn   = document.getElementById('btnPickImages');
+    var coverHidden = document.getElementById('cover_index');
+    var form  = document.getElementById('jobForm');
 
-    let files = [];
-    let coverIndex = 0;
-    let dragSrc = null;
+    var files = [];
+    var coverIndex = 0;
+    var dragSrc = null;
 
-    // винаги скрит резервния input
     input.style.display = 'none';
     grid.classList.add('empty');
 
-    btnPick.addEventListener('click', () => input.click());
+    btn.addEventListener('click', function(){ input.click(); });
 
-    input.addEventListener('change', (e) => {
-        const list = Array.from(e.target.files || []);
-        for (const f of list) {
-            if (f.type && f.type.startsWith('image/')) files.push(f);
-        }
+    input.addEventListener('change', function (e) {
+        var list = Array.from(e.target.files || []);
+        list.forEach(function(f){
+            if (f.type && f.type.indexOf('image/') === 0) files.push(f);
+        });
         renderGrid();
-        input.value = ''; // позволи повторен избор на същите файлове
+        input.value = '';
     });
 
-    // Drop нови файлове в зоната
-    ['dragenter', 'dragover'].forEach(ev =>
-        grid.addEventListener(ev, (e) => { e.preventDefault(); grid.classList.add('dragging'); })
-    );
-    ['dragleave', 'drop'].forEach(ev =>
-        grid.addEventListener(ev, (e) => { e.preventDefault(); grid.classList.remove('dragging'); })
-    );
-    grid.addEventListener('drop', (e) => {
+    ['dragenter','dragover'].forEach(function(ev){
+        grid.addEventListener(ev, function(e){ e.preventDefault(); grid.classList.add('dragging'); });
+    });
+    ['dragleave','drop'].forEach(function(ev){
+        grid.addEventListener(ev, function(e){ e.preventDefault(); grid.classList.remove('dragging'); });
+    });
+    grid.addEventListener('drop', function(e){
         e.preventDefault();
-        grid.classList.remove('dragging');
-
-        // ако това е вътрешно пренареждане, не добавяме „файлове“
         if (dragSrc !== null) { dragSrc = null; return; }
-
-        const dt = e.dataTransfer;
-        if (!dt || !dt.files || dt.files.length === 0) return;
-
-        for (const f of Array.from(dt.files)) {
-            if (f.type && f.type.startsWith('image/')) files.push(f);
-        }
+        var dt = e.dataTransfer;
+        if (!dt || !dt.files) return;
+        Array.from(dt.files).forEach(function(f){
+            if (f.type && f.type.indexOf('image/') === 0) files.push(f);
+        });
         renderGrid();
     });
-
 
     function renderGrid() {
         grid.innerHTML = '';
         grid.classList.toggle('empty', files.length === 0);
 
-        files.forEach((file, idx) => {
-            const url = URL.createObjectURL(file);
-            const tile = document.createElement('div');
+        files.forEach(function(file, idx){
+            var url  = URL.createObjectURL(file);
+            var tile = document.createElement('div');
             tile.className = 'img-tile' + (idx === coverIndex ? ' is-cover' : '');
             tile.draggable = true;
-            tile.dataset.idx = idx;
+            tile.dataset.idx = String(idx);
 
-            tile.innerHTML = `
-        <img src="${url}" alt="Снимка">
-        <button type="button" class="remove-btn" title="Премахни">×</button>
-        <button type="button" class="cover-btn" title="Задай като корица">★</button>
-        <span class="badge">Корица</span>
-      `;
+            tile.innerHTML =
+                '<img src="' + url + '" alt="Снимка">' +
+                '<button type="button" class="remove-btn" title="Премахни">×</button>' +
+                '<button type="button" class="cover-btn" title="Задай като корица">★</button>' +
+                '<span class="badge">Корица</span>';
 
-            // забраняваме drag на самото <img>, за да влачим само плочката
             tile.querySelector('img').draggable = false;
-            tile.querySelector('img').addEventListener('dragstart', (e) => e.preventDefault());
 
-
-            // Премахване
-            tile.querySelector('.remove-btn').onclick = () => {
-                URL.revokeObjectURL(url);
+            tile.querySelector('.remove-btn').addEventListener('click', function(){
+                try { URL.revokeObjectURL(url); } catch(e){}
                 files.splice(idx, 1);
                 if (files.length === 0) { coverIndex = 0; }
                 else if (idx === coverIndex) { coverIndex = Math.min(coverIndex, files.length - 1); }
                 else if (idx < coverIndex) { coverIndex -= 1; }
                 renderGrid();
-            };
-
-            // Корица
-            tile.querySelector('.cover-btn').onclick = () => {
-                coverIndex = idx;
-                renderGrid();
-            };
-
-            // Пренареждане
-            tile.addEventListener('dragstart', (e) => {
-                dragSrc = idx;
-                e.dataTransfer.effectAllowed = 'move';
-                // някои браузъри изискват setData, за да не го третират като линк/картинка
-                e.dataTransfer.setData('text/plain', '');
             });
 
-            tile.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
-            tile.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation(); // важно: да не стига до грида
-                const target = parseInt(e.currentTarget.dataset.idx, 10);
-                if (dragSrc === null || dragSrc === target) { dragSrc = null; return; }
+            tile.querySelector('.cover-btn').addEventListener('click', function(){
+                coverIndex = idx;
+                renderGrid();
+            });
 
-                const moved = files.splice(dragSrc, 1)[0];
+            tile.addEventListener('dragstart', function(e){
+                dragSrc = idx;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain','');
+            });
+            tile.addEventListener('dragover', function(e){ e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+            tile.addEventListener('drop', function(e){
+                e.preventDefault();
+                var target = idx;
+                if (dragSrc === null || dragSrc === target) { dragSrc = null; return; }
+                var moved = files.splice(dragSrc, 1)[0];
                 files.splice(target, 0, moved);
 
-                // Коригиране на корицата според новия ред
                 if (coverIndex === dragSrc) coverIndex = target;
                 else if (dragSrc < coverIndex && target >= coverIndex) coverIndex -= 1;
                 else if (dragSrc > coverIndex && target <= coverIndex) coverIndex += 1;
@@ -242,23 +261,134 @@ function loadJobForm(type) {
                 renderGrid();
             });
 
-
             grid.appendChild(tile);
         });
 
         coverHidden.value = String(coverIndex);
     }
 
-    // Подготвяме файловете в избрания от нас ред + корица
-    form.addEventListener('submit', () => {
+    form.addEventListener('submit', function(){
         if (files.length > 0) {
-            const dt = new DataTransfer();
-            files.forEach(f => dt.items.add(f));
+            var dt = new DataTransfer();
+            files.forEach(function(f){ dt.items.add(f); });
             input.files = dt.files;
         }
         coverHidden.value = String(coverIndex >= 0 ? coverIndex : 0);
     });
 }
+
+// ===== Multi-select UI (Фирма) – общо за двете форми =====
+function initCompanyMultiUI() {
+    var isCompany   = document.getElementById('is_company');
+    var singleBlock = document.getElementById('single-profession-block');
+    var multiBlock  = document.getElementById('multi-profession-block');
+    var singleSelect= document.getElementById('profession_single');
+
+    if (!isCompany || !singleBlock || !multiBlock || !singleSelect) return;
+
+    var ALL_PROFS   = [];
+    var picked      = []; // ключове
+    var profSearch  = document.getElementById('prof-search');
+    var profSuggest = document.getElementById('prof-suggestions');
+    var profChips   = document.getElementById('prof-chips');
+    var profHidden  = document.getElementById('professions_json');
+
+    fetch('professions_json.php')
+      .then(function(r){ return r.json(); })
+      .then(function(items){ ALL_PROFS = items; })
+      .catch(console.error);
+
+    isCompany.addEventListener('change', function(){
+        var on = isCompany.checked;
+        singleBlock.style.display = on ? 'none' : 'block';
+        multiBlock.style.display  = on ? 'block' : 'none';
+        if (on) singleSelect.removeAttribute('required'); else singleSelect.setAttribute('required','required');
+    });
+
+    if (profSearch) {
+        profSearch.addEventListener('input', function(){
+            var q = String(profSearch.value || '').toLowerCase().trim();
+            if (!q) { profSuggest.style.display = 'none'; profSuggest.innerHTML=''; return; }
+            var matches = ALL_PROFS.filter(function(x){
+                return x.key.toLowerCase().indexOf(q) !== -1 || x.label.toLowerCase().indexOf(q) !== -1;
+            }).slice(0, 20);
+
+            profSuggest.innerHTML = '';
+            matches.forEach(function(m){
+                var row = document.createElement('div');
+                row.textContent = m.label;
+                row.addEventListener('click', function(){
+                    if (picked.indexOf(m.key) === -1) {
+                        if (picked.length >= 10) { alert('Може да изберете до 10 професии.'); return; }
+                        picked.push(m.key);
+                        renderChips();
+                    }
+                    profSuggest.style.display = 'none';
+                    profSearch.value = '';
+                });
+                profSuggest.appendChild(row);
+            });
+            profSuggest.style.display = matches.length ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', function(e){
+            if (!profSuggest.contains(e.target) && e.target !== profSearch) {
+                profSuggest.style.display = 'none';
+            }
+        });
+    }
+
+    function renderChips() {
+        profChips.innerHTML = '';
+        picked.forEach(function(k){
+            var it  = ALL_PROFS.find(function(x){ return x.key === k; });
+            var lbl = it ? it.label : k;
+            var chip = document.createElement('span');
+            chip.className = 'chip';
+            chip.innerHTML = lbl + ' <button type="button" aria-label="remove">&times;</button>';
+            chip.querySelector('button').addEventListener('click', function(){
+                picked = picked.filter(function(x){ return x !== k; });
+                renderChips();
+            });
+            profChips.appendChild(chip);
+        });
+        profHidden.value = JSON.stringify(picked);
+
+        if (isCompany.checked && picked.length) {
+            var first = picked[0];
+            if (!singleSelect.querySelector('option[value="' + first + '"]')) {
+                var opt = document.createElement('option');
+                opt.value = first;
+                opt.text  = first;
+                singleSelect.appendChild(opt);
+            }
+            singleSelect.value = first;
+        }
+    }
+
+    // подсигуряване при submit
+    var form = document.getElementById('jobForm');
+    form.addEventListener('submit', function(e){
+        if (isCompany.checked) {
+            if (picked.length === 0) {
+                e.preventDefault();
+                alert('Моля, изберете поне една професия за фирмата.');
+                return;
+            }
+            var first = picked[0];
+            if (!singleSelect.querySelector('option[value="' + first + '"]')) {
+                var opt = document.createElement('option');
+                opt.value = first;
+                opt.text  = first;
+                singleSelect.appendChild(opt);
+            }
+            singleSelect.value = first;
+        }
+    });
+}
+
+
+
 
 // ======================= ИНИЦИАЛИЗАЦИЯ НА БУТОНИ =======================
 document.addEventListener('DOMContentLoaded', () => {

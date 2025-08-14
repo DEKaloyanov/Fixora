@@ -560,3 +560,173 @@ footer {
 .img-tile.is-cover .badge{ display:inline-block; }
 
 
+/* --- Multi-professions UI --- */
+.switch-company { display:inline-flex; align-items:center; gap:8px; margin:6px 0 12px; font-weight:600; color:#1f4365; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 10px; }
+.chip { background:#e9eef5; color:#1f4365; border-radius:18px; padding:6px 10px; font-size:14px; display:inline-flex; align-items:center; gap:6px; }
+.chip .chip-x { border:none; background:transparent; font-size:16px; line-height:1; cursor:pointer; color:#546987; }
+.chips-hint { color:#94a3b8; font-size:14px; }
+
+/* Modal */
+.modal-backdrop { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.5); z-index:9999; }
+.modal-panel { width:min(720px, 94vw); background:#fff; border-radius:12px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.2); }
+.modal-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.modal-head h3 { margin:0; color:#1f4365; }
+.modal-head input { flex:1; padding:8px 10px; border:1px solid #cfd8e3; border-radius:8px; }
+.modal-body { max-height:56vh; overflow:auto; border:1px solid #e5e7eb; border-radius:8px; padding:8px; }
+.prof-row { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:8px; cursor:pointer; }
+.prof-row:hover { background:#f3f6fb; }
+.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:10px; }
+.btn-small.primary { background:#1f4365; color:#fff; }
+
+/* Маркер „Фирма“ */
+.badge-company{
+  display:inline-block;
+  margin-right:8px;
+  padding:2px 8px;
+  font-size:12px;
+  border-radius:10px;
+  background:#1f4365;
+  color:#fff;
+  vertical-align:middle;
+}
+
+/* Чипове с професии */
+.profession-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:.25rem 0 .5rem;
+}
+.profession-chips .chip{
+  padding:4px 8px;
+  border-radius:10px;
+  border:1px solid #cfd8e3;
+  background:#f5f7fb;
+  font-size:12px;
+  color:#1f4365;
+}
+
+
+/* Поле за множествен избор на професии */
+.prof-list{
+  display:grid;
+  grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+  gap:8px;
+  margin:.5rem 0 0.5rem;
+}
+.prof-item{
+  padding:6px 10px;
+  border:1px solid #cfd8e3;
+  background:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  text-align:left;
+}
+.prof-item:hover{ border-color:#1f4365; box-shadow:0 1px 6px rgba(31,67,101,.12); }
+.prof-item.selected{ opacity:.5; cursor:default; }
+
+#prof-search{
+  width:100%;
+  padding:8px 10px;
+  border:1px solid #cfd8e3;
+  border-radius:8px;
+  font-size:14px;
+}
+
+/* Чипове + Х */
+.profession-chips{ display:flex; flex-wrap:wrap; gap:6px; margin:.25rem 0 .5rem; }
+.profession-chips .chip{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  border-radius:10px;
+  border:1px solid #cfd8e3;
+  background:#f5f7fb;
+  font-size:12px;
+  color:#1f4365;
+}
+.profession-chips .chip-x{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1;
+}
+
+.inline { display:inline-flex; align-items:center; gap:8px; margin:8px 0; }
+
+.multi-profession { border:1px solid #ccc; border-radius:8px; padding:10px; background:#fff; }
+.chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.chip { background:#eef3ff; border:1px solid #bcd; border-radius:16px; padding:4px 10px; font-size:13px; }
+.chip button { margin-left:6px; border:none; background:transparent; cursor:pointer; font-size:14px; }
+
+.suggestions { display:none; margin-top:6px; border:1px solid #ddd; border-radius:6px; max-height:160px; overflow:auto; background:#fff; }
+.suggestions div { padding:6px 10px; cursor:pointer; }
+.suggestions div:hover { background:#f0f6ff; }
+
+/* вече ги има, но за всеки случай: */
+.badge-company { display:inline-block; background:#1f4365; color:#fff; border-radius:6px; padding:2px 6px; font-size:12px; margin-right:6px; }
+.profession-chips { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+.profession-chips .chip { background:#eef3ff; border:1px solid #bcd; }
+
+
+.badge-company{
+  display:inline-block;
+  margin-right:8px;
+  padding:2px 8px;
+  font-size:12px;
+  background:#1f4365;
+  color:#fff;
+  border-radius:999px;
+  vertical-align:middle;
+}
+
+.profession-chips{
+  margin:6px 0 8px 0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.profession-chips .chip,
+.chips .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  background:#eef2f7;
+  border:1px solid #d6deea;
+  border-radius:999px;
+  font-size:13px;
+  color:#1f4365;
+}
+.chips .chip button{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1;
+  color:#6b7a90;
+}
+
+.prof-suggestions{
+  position:relative;
+  margin-top:4px;
+  max-height:200px;
+  overflow:auto;
+  border:1px solid #d6deea;
+  border-radius:8px;
+  background:#fff;
+  display:none;
+}
+.prof-suggestions > div{
+  padding:8px 10px;
+  cursor:pointer;
+}
+.prof-suggestions > div:hover{
+  background:#f3f6fb;
+}
+
