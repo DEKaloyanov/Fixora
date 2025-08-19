@@ -1,0 +1,732 @@
+
+/* Основна стилизация */
+body {
+    font-family: Arial, sans-serif;
+  background-image: url("../img/FON=FIXORA.png"); /* пътят до изображението */
+  background-size:cover;        /* покрива цялата страница */
+  background-repeat: repeat;  /* да не се повтаря */
+  background-position: center;   /* центрира изображението */
+  
+
+}
+
+main {
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 20px;
+    /*background: rgb(255, 255, 255);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+}
+
+/* Профилна секция */
+.profile-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 4px solid #1f4365;
+    border-radius: 2%;
+    padding-bottom: 20px;
+}
+
+.profile-left {
+    flex: 0 0 150px;
+    padding-right: 20px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #1f4365; /* синя рамка */
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.value {
+    margin-left: 5px;
+}
+
+.profile-info p {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: normal;
+    margin: 5px 0;
+}
+
+.profile-info .label {
+    flex: 0 0 150px; /* фиксирана ширина на етикета */
+    text-align: right; /* подравняване надясно */
+    font-weight: normal;
+    font-size: 16px;
+    color: #546987;
+}
+
+.profile-info .value {
+    text-align: left;
+    font-size: 20px;
+    color: #1f4365;
+}
+
+.connection-requests {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+.request-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.request-card img.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.request-card form button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.edit-profile-button {
+    position: absolute;
+    top: 100px;
+    right: 335px;
+    background-color: #1f4365;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.edit-profile-button:hover {
+    background-color: #546987;
+}
+
+
+
+
+
+
+
+
+
+
+
+.job-controls {
+  position: relative;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.main-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.main-buttons button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #1f4365;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.main-buttons button:hover {
+  background-color: #546987;
+}
+
+.job-sub-buttons {
+  position: absolute;
+  top: 0;
+  display: flex;
+  gap: 15px;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  z-index: 1;
+}
+
+.job-sub-buttons button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #546987;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.job-sub-buttons button:hover {
+  background-color: #1f4365;
+}
+
+/* Подменю отляво (плъзгане наляво от „Всички обяви“) */
+.job-sub-buttons.all {
+  right: calc(70% + 1px);
+  transform: translateX(53%);
+}
+
+.job-sub-buttons.all.show {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Подменю отдясно (плъзгане надясно от „Добави обява“) */
+.job-sub-buttons.add {
+  left: calc(70% + 1px);
+  transform: translateX(-53%);
+}
+
+.job-sub-buttons.add.show {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Формата и обявите */
+#jobFormContainer,
+#jobList {
+    margin-top: 30px;
+}
+
+/* Обява в списъка */
+.job-card {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+    z-index: 1; /* намаляваме приоритета спрямо navbar */
+    position: relative; /* за да работи z-index */
+}
+
+.job-card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.job-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.job-info {
+    flex-grow: 1;
+}
+
+.job-info h4 {
+    margin: 0 0 10px 0;
+}
+
+.edit-btn {
+    background-color: #1f4365;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #546987;
+}
+
+
+/* Общ контейнер на формата */
+/* Контейнер за трите колони */
+/* Общ контейнер на формата (нов, едноколонен и чист) */
+#jobForm{
+  display:block;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 16px;
+  background: #ffffffcc;
+  border: 1px solid #cfd8e3;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(31,67,101,.08);
+  animation: fadeInForm 0.4s ease-in-out;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+
+/* Общ стил за всяка от трите колони */
+.job-form-column {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Етикети и полета */
+#jobForm label {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 4px;
+}
+
+#jobForm input[type="text"],
+#jobForm input[type="number"],
+#jobForm input[type="file"],
+#jobForm select,
+#jobForm textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#jobForm input:focus,
+#jobForm select:focus,
+#jobForm textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+/* Текстово поле */
+#jobForm textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Бутон за запазване */
+#jobForm button[type="submit"] {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+#jobForm button[type="submit"]:hover {
+    background-color: #2563eb;
+}
+
+/* Полета за членове на екип */
+#teamMemberFields input[type="text"] {
+    margin-top: 6px;
+}
+
+/* Преглед на снимки */
+.image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+
+@keyframes fadeInForm {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+footer {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 15px 10px;
+  font-size: 14px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+#active-projects-section {
+    padding: 20px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.active-project-card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.timeline {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.timeline .step {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: #eee;
+}
+
+.timeline .step.done {
+    background: #4caf50;
+    color: white;
+    font-weight: bold;
+}
+
+#ratings-section {
+    margin-top: 40px;
+    background: #fdfdfd;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.rating-card {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.rating-card.given {
+    background: #f8f8f8;
+}
+
+.rating-card span {
+    font-weight: bold;
+    color: #ffa500;
+}
+
+
+.favorite-icon {
+  position: absolute;
+  top: 10px;
+  right: -50px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.favorite-icon img {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.favorite-icon img:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+/* Image manager (Добави работа) */
+.images-field { margin-top: 10px; }
+.images-toolbar {
+  display:flex; align-items:center; gap:10px; margin-bottom:8px;
+}
+
+.images-hint{ color:#6b7a90; font-size:13px; }
+
+
+.btn-small{
+  padding:8px 12px; border:1px solid #cfd8e3; background:#fff; color:#1f4365;
+  border-radius:10px; cursor:pointer; font-weight:600;
+}
+.btn-small:hover{ border-color:#1f4365; box-shadow:0 2px 8px rgba(31,67,101,.12); }
+
+.images-grid{
+  position:relative;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap:12px;
+  border:2px dashed #cfd8e3;
+  border-radius:14px;
+  padding:12px;
+  min-height:164px;
+  background:#f6f9fc;
+  transition: border-color .2s ease, background .2s ease;
+}
+.images-grid:not(.empty){ border-style: solid; }
+.images-grid.dragging{ border-color:#1f4365; background:#f1f6fb; }
+.images-grid.empty::before{
+  content: attr(data-empty);
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  color:#94a3b8; font-size:14px; text-align:center;
+}
+
+.images-grid.dragging{ border-color:#1f4365; }
+.images-grid.empty::before{
+  content: attr(data-empty); position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%); color:#94a3b8; font-size:14px;
+}
+
+.img-tile{
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 2px 10px rgba(31,67,101,.08);
+  aspect-ratio: 1 / 1;          /* квадратни плочки */
+}
+.img-tile img{
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+}
+
+
+.img-tile .remove-btn,
+.img-tile .cover-btn{
+  position:absolute; top:8px; width:30px; height:30px;
+  border-radius:50%;
+  border:1px solid #cfd8e3; background:#ffffffee; cursor:pointer;
+  line-height:28px; text-align:center; font-weight:700;
+  box-shadow:0 2px 10px rgba(31,67,101,.12);
+  backdrop-filter: saturate(180%) blur(6px);
+}
+.img-tile .remove-btn{ right:8px; }
+.img-tile .cover-btn{ left:8px; color:#1f4365; }
+
+.img-tile.is-cover{
+  outline: 3px solid #1f4365; outline-offset: 0;
+}
+.img-tile .badge{
+  position:absolute; top:8px; left:8px;
+  background:#1f4365; color:#fff; font-size:12px;
+  padding:4px 8px; border-radius:10px;
+  display:none;
+}
+.img-tile.is-cover .badge{ display:inline-block; }
+
+
+/* --- Multi-professions UI --- */
+.switch-company { display:inline-flex; align-items:center; gap:8px; margin:6px 0 12px; font-weight:600; color:#1f4365; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 10px; }
+.chip { background:#e9eef5; color:#1f4365; border-radius:18px; padding:6px 10px; font-size:14px; display:inline-flex; align-items:center; gap:6px; }
+.chip .chip-x { border:none; background:transparent; font-size:16px; line-height:1; cursor:pointer; color:#546987; }
+.chips-hint { color:#94a3b8; font-size:14px; }
+
+/* Modal */
+.modal-backdrop { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.5); z-index:9999; }
+.modal-panel { width:min(720px, 94vw); background:#fff; border-radius:12px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.2); }
+.modal-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.modal-head h3 { margin:0; color:#1f4365; }
+.modal-head input { flex:1; padding:8px 10px; border:1px solid #cfd8e3; border-radius:8px; }
+.modal-body { max-height:56vh; overflow:auto; border:1px solid #e5e7eb; border-radius:8px; padding:8px; }
+.prof-row { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:8px; cursor:pointer; }
+.prof-row:hover { background:#f3f6fb; }
+.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:10px; }
+.btn-small.primary { background:#1f4365; color:#fff; }
+
+/* Маркер „Фирма“ */
+.badge-company{
+  display:inline-block;
+  margin-right:8px;
+  padding:2px 8px;
+  font-size:12px;
+  border-radius:10px;
+  background:#1f4365;
+  color:#fff;
+  vertical-align:middle;
+}
+
+/* Чипове с професии */
+.profession-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:.25rem 0 .5rem;
+}
+.profession-chips .chip{
+  padding:4px 8px;
+  border-radius:10px;
+  border:1px solid #cfd8e3;
+  background:#f5f7fb;
+  font-size:12px;
+  color:#1f4365;
+}
+
+
+/* Поле за множествен избор на професии */
+.prof-list{
+  display:grid;
+  grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+  gap:8px;
+  margin:.5rem 0 0.5rem;
+}
+.prof-item{
+  padding:6px 10px;
+  border:1px solid #cfd8e3;
+  background:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  text-align:left;
+}
+.prof-item:hover{ border-color:#1f4365; box-shadow:0 1px 6px rgba(31,67,101,.12); }
+.prof-item.selected{ opacity:.5; cursor:default; }
+
+#prof-search{
+  width:100%;
+  padding:8px 10px;
+  border:1px solid #cfd8e3;
+  border-radius:8px;
+  font-size:14px;
+}
+
+/* Чипове + Х */
+.profession-chips{ display:flex; flex-wrap:wrap; gap:6px; margin:.25rem 0 .5rem; }
+.profession-chips .chip{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  border-radius:10px;
+  border:1px solid #cfd8e3;
+  background:#f5f7fb;
+  font-size:12px;
+  color:#1f4365;
+}
+.profession-chips .chip-x{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1;
+}
+
+.inline { display:inline-flex; align-items:center; gap:8px; margin:8px 0; }
+
+.multi-profession { border:1px solid #ccc; border-radius:8px; padding:10px; background:#fff; }
+.chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.chip { background:#eef3ff; border:1px solid #bcd; border-radius:16px; padding:4px 10px; font-size:13px; }
+.chip button { margin-left:6px; border:none; background:transparent; cursor:pointer; font-size:14px; }
+
+.suggestions { display:none; margin-top:6px; border:1px solid #ddd; border-radius:6px; max-height:160px; overflow:auto; background:#fff; }
+.suggestions div { padding:6px 10px; cursor:pointer; }
+.suggestions div:hover { background:#f0f6ff; }
+
+/* вече ги има, но за всеки случай: */
+.badge-company { display:inline-block; background:#1f4365; color:#fff; border-radius:6px; padding:2px 6px; font-size:12px; margin-right:6px; }
+.profession-chips { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+.profession-chips .chip { background:#eef3ff; border:1px solid #bcd; }
+
+
+.badge-company{
+  display:inline-block;
+  margin-right:8px;
+  padding:2px 8px;
+  font-size:12px;
+  background:#1f4365;
+  color:#fff;
+  border-radius:999px;
+  vertical-align:middle;
+}
+
+.profession-chips{
+  margin:6px 0 8px 0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.profession-chips .chip,
+.chips .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  background:#eef2f7;
+  border:1px solid #d6deea;
+  border-radius:999px;
+  font-size:13px;
+  color:#1f4365;
+}
+.chips .chip button{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1;
+  color:#6b7a90;
+}
+
+.prof-suggestions{
+  position:relative;
+  margin-top:4px;
+  max-height:200px;
+  overflow:auto;
+  border:1px solid #d6deea;
+  border-radius:8px;
+  background:#fff;
+  display:none;
+}
+.prof-suggestions > div{
+  padding:8px 10px;
+  cursor:pointer;
+}
+.prof-suggestions > div:hover{
+  background:#f3f6fb;
+}
+

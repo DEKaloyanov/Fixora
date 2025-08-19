@@ -1,64 +1,112 @@
 <?php
 session_start();
-require_once 'db.php';
+require_once __DIR__ . '/db.php';
 
 if (!isset($_SESSION['user']['id'])) {
-    exit('Не сте влезли в системата.');
+    http_response_code(401);
+    exit('Неоторизиран достъп');
 }
 
-$current_user_id = $_SESSION['user']['id'];
-$with_id = isset($_GET['with']) ? (int)$_GET['with'] : 0;
-$job_id = isset($_GET['job']) ? (int)$_GET['job'] : 0;
+$me   = (int)$_SESSION['user']['id'];
+$with = isset($_GET['with']) ? (int)$_GET['with'] : 0;
+$job  = isset($_GET['job'])  ? (int)$_GET['job']  : 0;
 
-if ($with_id === 0 || $job_id === 0) {
-    exit('Невалидна заявка.');
+if ($with <= 0 || $job <= 0) {
+    echo '<p class="no-chat">Изберете разговор.</p>';
+    exit;
 }
 
-// Проверка за връзка
-$stmt = $conn->prepare("
-    SELECT id FROM connections
-    WHERE job_id = :job_id AND (
-        (user1_id = :uid AND user2_id = :with_id) OR 
-        (user1_id = :with_id AND user2_id = :uid)
-    )
-");
-$stmt->execute([
-    'job_id' => $job_id,
-    'uid' => $current_user_id,
-    'with_id' => $with_id
-]);
+$DEFAULT_AVATAR = 'img/ChatGPT Image Aug 6, 2025, 03_15_39 PM.png';
 
-if ($stmt->rowCount() === 0) {
-    exit('Нямате достъп до този чат.');
-}
-
-// Зареждане на съобщенията
-$stmt = $conn->prepare("
-    SELECT m.*, u.ime, u.familiq, u.profile_image 
+$sql = "
+    SELECT m.id, m.sender_id, m.receiver_id, m.job_id, m.message, m.message_type,
+           m.image_path, m.thumb_path, m.mime_type, m.created_at,
+           s.profile_image AS sender_img
     FROM messages m
-    INNER JOIN users u ON u.id = m.sender_id
-    WHERE 
-        ((m.sender_id = :uid AND m.receiver_id = :with_id) OR 
-         (m.sender_id = :with_id AND m.receiver_id = :uid)) AND
-        m.job_id = :job_id
-    ORDER BY m.created_at ASC
-");
-$stmt->execute([
-    'uid' => $current_user_id,
-    'with_id' => $with_id,
-    'job_id' => $job_id
-]);
-$messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    JOIN users s ON s.id = m.sender_id
+    WHERE m.job_id = :job
+      AND (
+            (m.sender_id = :me AND m.receiver_id = :with)
+         OR (m.sender_id = :with AND m.receiver_id = :me)
+      )
+    ORDER BY m.created_at ASC, m.id ASC
+";
+$stmt = $conn->prepare($sql);
+$stmt->execute([':job' => $job, ':me' => $me, ':with' => $with]);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($messages as $row):
-    $is_sender = $row['sender_id'] == $current_user_id;
-?>
-    <div class="chat-message <?= $is_sender ? 'sent' : 'received' ?>">
-        <div class="message-info">
-            <img src="<?= htmlspecialchars($row['profile_image'] ?? 'assets/default.png') ?>" class="avatar">
-            <strong><?= htmlspecialchars($row['ime'] . ' ' . $row['familiq']) ?></strong>
-            <span class="timestamp"><?= date('H:i', strtotime($row['created_at'])) ?></span>
-        </div>
-        <div class="message-text"><?= nl2br(htmlspecialchars($row['message'])) ?></div>
-    </div>
-<?php endforeach; ?>
+if (!$rows) {
+    echo '<div class="no-messages">Няма съобщения. Започнете разговора!</div>';
+    exit;
+}
+
+/* Helpers */
+function esc($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+function time_label($ts){ return date('H:i', strtotime($ts)); }
+function day_key($ts){ return date('Y-m-d', strtotime($ts)); }
+function day_label($ts){ return date('d.m.Y', strtotime($ts)); }
+
+function resolve_avatar_url(?string $sender_img, string $default): string {
+    $imgRel = ltrim((string)$sender_img, '/');
+    $candidatesFS = [
+        __DIR__ . '/../uploads/' . $imgRel,
+        __DIR__ . '/../' . $imgRel,
+    ];
+    foreach ($candidatesFS as $fsPath) {
+        if ($imgRel && file_exists($fsPath)) {
+            if (strpos($imgRel, 'uploads/') === 0) return $imgRel;
+            return 'uploads/' . $imgRel;
+        }
+    }
+    return $default;
+}
+
+$prevSender = null; $prevTime = null; $prevDay = null;
+
+foreach ($rows as $m) {
+    $sent    = ((int)$m['sender_id'] === $me);
+    $klass   = $sent ? 'sent' : 'received';
+    $created = $m['created_at'];
+    $dKey    = day_key($created);
+
+    if ($dKey !== $prevDay) {
+        echo '<div class="day-separator">'.esc(day_label($created)).'</div>';
+        $prevDay = $dKey; $prevSender = null; $prevTime = null;
+    }
+
+    $avatarUrl = resolve_avatar_url($m['sender_img'] ?? null, $DEFAULT_AVATAR);
+    $isFirstInBlock = true;
+    if ($prevSender !== null && $prevSender == $m['sender_id'] && $prevTime) {
+        $delta = abs(strtotime($created) - strtotime($prevTime));
+        if ($delta <= 300) $isFirstInBlock = false;
+    }
+
+    echo '<div class="msg-row '.esc($klass).'">';
+    if ($isFirstInBlock) {
+        echo '<img class="avatar" src="'.esc($avatarUrl).'" alt="avatar" onerror="this.onerror=null;this.src=\''.esc($DEFAULT_AVATAR).'\';">';
+    } else {
+        echo '<img class="avatar" src="'.esc($avatarUrl).'" alt="" style="visibility:hidden;" onerror="this.onerror=null;this.src=\''.esc($DEFAULT_AVATAR).'\';">';
+    }
+
+    echo '<div class="msg-col">';
+    echo '  <div class="msg-time">'.esc(time_label($created)).'</div>';
+    echo '  <div class="message '.esc($klass).'">';
+
+    if ((int)$m['message_type'] === 1 && !empty($m['image_path'])) {
+        $thumb = $m['thumb_path'] ?: $m['image_path'];
+        echo '    <a class="msg-image-link" href="'.esc($m['image_path']).'" target="_blank" rel="noopener">';
+        echo '      <img class="msg-image" src="'.esc($thumb).'" alt="image">';
+        echo '    </a>';
+        if (!empty($m['message'])) {
+            echo '    <div class="msg-text" style="margin-top:6px">'.nl2br(esc($m['message'])).'</div>';
+        }
+    } else {
+        echo '    <div class="msg-text">'.nl2br(esc($m['message'])).'</div>';
+    }
+
+    echo '  </div>';
+    echo '</div>'; // .msg-col
+    echo '</div>'; // .msg-row
+
+    $prevSender = $m['sender_id']; $prevTime = $created;
+}
