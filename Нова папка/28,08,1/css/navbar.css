@@ -1,0 +1,236 @@
+/* ============ БАЗОВО ПОВЕДЕНИЕ ============ */
+:root {
+  --nav-height: 64px; /* реалната стойност се задава от JS в navbar.php */
+  --nav-bg: #ffffff;
+  --nav-border: #546987;
+  --nav-link: rgb(31, 67, 101);
+  --nav-link-active: #1f4365;
+  --nav-link-hover-bg: rgba(84, 105, 135, 0.08);
+}
+
+body.has-fixed-nav {
+  padding-top: var(--nav-height);
+}
+
+/* ============ NAVBAR ============ */
+.site-navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 900; /* под модали/overlay */
+  background-color: var(--nav-bg);
+  border-bottom: 4px solid var(--nav-border);
+}
+
+/* Вътрешният контейнер вече е FULL-WIDTH */
+.site-navbar .nav-inner {
+  width: 100%;
+  margin: 0;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* Логото остава вляво */
+.nav-logo .logo-small {
+  height: 40px;
+  display: block;
+}
+
+/* Навигацията се избутва вдясно */
+.nav-main {
+  margin-left:auto;          /* <<< Ето тук става „вдясно“ */
+  margin-right: 30px;
+  display: flex;
+}
+
+/* ============ ГЛАВНО МЕНЮ ============ */
+.navbar {
+  list-style: none;
+  display: flex;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: flex-end;  /* държи елементите вдясно вътре в .nav-main */
+}
+
+.navbar li a {
+  position: relative;
+  text-decoration: none;
+  color: var(--nav-link);
+  font-weight: 700;
+  font-size: 18px;
+  padding: 10px 10px;
+  border-radius: 6px;
+  transition: color .2s ease, background-color .2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar li a.active {
+  color: var(--nav-link-active);
+  background-color: var(--nav-link-hover-bg);
+}
+
+.navbar li a:hover {
+  background-color: var(--nav-link-hover-bg);
+}
+
+/* Стил за бутона (профил) */
+.navbar li a.button {
+  padding: 10px 14px;
+  padding-right: 32px;
+  border-radius: 8px;
+  background-color: #1f4365;
+  color: #fff;
+}
+.navbar li a.button:hover { background-color: #274e7a; }
+
+/* ============ DROPDOWN (edge-to-edge items) ============ */
+.dropdown { position: relative; }
+
+.dropdown-toggle::after {
+  content: "▼";
+  font-size: 0.6em;
+  margin-left: 6px;
+  transition: transform .2s ease;
+  opacity: .8;
+}
+.dropdown:hover .dropdown-toggle::after { transform: rotate(180deg); }
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;                 /* без празнина под бутона */
+  right: 0;
+  z-index: 1000;
+  min-width: 180px;
+  width: max-content;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0,0,0,.1);
+
+  /* ключово за edge-to-edge: без вътрешен padding и без bullets */
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  display: none;
+}
+.dropdown:hover .dropdown-menu { display: block; }
+
+/* всеки ред */
+.dropdown-menu li { margin: 0; }
+
+/* линковете пълнят цялата ширина на менюто */
+.dropdown-menu a {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;      /* вътрешен отстъп за текста */
+  margin: 0;               /* без inset по хоризонтала */
+  border-radius: 0;        /* фонът да е от край до край */
+  text-decoration: none;
+  color: #333;
+  white-space: nowrap;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+/* лека разделителна линия между редовете */
+.dropdown-menu li + li a {
+  border-top: 1px solid #f0f2f6;
+}
+
+/* hover фон по целия ред */
+.dropdown-menu a:hover {
+  background: #f2f6fb;
+  color: #1f4365;
+}
+
+/* запазваме заоблянето на първия/последния ред да съвпада с контейнера */
+.dropdown-menu li:first-child a {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.dropdown-menu li:last-child a {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+
+/* ============ MODALS / OVERLAY ============ */
+#overlay {
+  display: none; /* управлява се от modal.js */
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal {
+  display: none; /* управлява се от modal.js */
+  position: fixed;
+  z-index: 1001;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  position: relative;
+  background: #fff;
+  width: 90%;
+  max-width: 420px;
+  padding: 26px 28px;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+  text-align: center;
+}
+.modal-content h2 { margin: 0 0 14px; }
+
+.modal-content form input {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  font-size: 16px;
+}
+
+.modal-content button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 16px;
+  background: #1f4365;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.modal-content button:hover { background: #274e7a; }
+
+.modal-content .close {
+  position: absolute;
+  top: 10px; right: 14px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* ============ АНИМАЦИЯ ЗА ЛЮБИМИ ============ */
+@keyframes pulse-fav {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.animate-favorite { animation: pulse-fav .6s ease-in-out; color: #f45b69 !important; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 920px) {
+  .navbar { gap: 10px; }
+  .navbar li a { font-size: 16px; padding: 8px 8px; }
+}
+@media (max-width: 720px) {
+  .site-navbar .nav-inner { padding: 8px 14px; }
+  .navbar { flex-wrap: wrap; gap: 8px; }
+}

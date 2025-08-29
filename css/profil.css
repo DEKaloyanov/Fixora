@@ -1,732 +1,490 @@
+/* === База/фон === */
+*,
+*::before,
+*::after{ box-sizing: border-box; }
 
-/* Основна стилизация */
-body {
-    font-family: Arial, sans-serif;
-  background-image: url("../img/FON=FIXORA.png"); /* пътят до изображението */
-  background-size:cover;        /* покрива цялата страница */
-  background-repeat: repeat;  /* да не се повтаря */
-  background-position: center;   /* центрира изображението */
-  
+body{
+  font-family: Arial, sans-serif;
+  background-image: url("../img/FON=FIXORA.png");
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: center;
+  color: #1f2a37;
+}
+main{ max-width:1300px; margin:20px auto; padding:20px; }
+html{ scroll-behavior: smooth; }
 
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --ink:#1f2a37;
+  --muted:#5b6b7a;
+  --brand:#1f4365;
+  --brand-2:#15314a;
+  --line:#e6e9ee;
+  --chip-bg:#eef2f7;
+  --chip-br:#d6deea;
+  --ok:#16a34a;
+  --danger:#dc2626;
+  --focus:#3b82f6;
 }
 
-main {
-    max-width: 1300px;
-    margin: 20px auto;
-    padding: 20px;
-    /*background: rgb(255, 255, 255);
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+/* === Профилен хедър === */
+.profile-container{
+  display:grid;
+  grid-template-columns: 170px 1fr;
+  gap:18px;
+  align-items:start;
+  border-bottom: 4px solid var(--brand);
+  border-radius: 2%;
+  padding-bottom: 20px;
+  overflow:hidden;
+}
+.profile-left{ padding-right:0; }
+.profile-image{
+  width:180px; height:180px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid var(--brand);
+  box-shadow:0 0 5px rgba(0,0,0,.1);
+}
+.profile-right{
+  display:grid;
+  grid-template-columns: minmax(260px,330px) minmax(260px,550px) 1fr;
+  column-gap: 8px;
+  row-gap: 10px;
+  align-items:start;
+  min-width: 0;
 }
 
-/* Профилна секция */
-.profile-container {
-    display: flex;
-    align-items: center;
-    border-bottom: 4px solid #1f4365;
-    border-radius: 2%;
-    padding-bottom: 20px;
-}
-
-.profile-left {
-    flex: 0 0 150px;
-    padding-right: 20px;
-}
-
-.profile-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #1f4365; /* синя рамка */
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-
-.profile-info h2 {
-    margin: 0;
-    font-size: 24px;
-}
-
-.label {
-    font-weight: bold;
-}
-
-.value {
-    margin-left: 5px;
-}
-
-.profile-info p {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    font-weight: normal;
-    margin: 5px 0;
-}
-
-.profile-info .label {
-    flex: 0 0 150px; /* фиксирана ширина на етикета */
-    text-align: right; /* подравняване надясно */
-    font-weight: normal;
-    font-size: 16px;
-    color: #546987;
-}
-
-.profile-info .value {
-    text-align: left;
-    font-size: 20px;
-    color: #1f4365;
-}
-
-.connection-requests {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f9f9f9;
-  border-radius: 10px;
-}
-
-.request-card {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.request-card img.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.request-card form button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-.edit-profile-button {
-    position: absolute;
-    top: 100px;
-    right: 335px;
-    background-color: #1f4365;
-    color: #ffffff;
-    padding: 8px 16px;
-    font-size: 14px;
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-}
-
-.edit-profile-button:hover {
-    background-color: #546987;
-}
-
-
-
-
-
-
-
-
-
-
-
-.job-controls {
-  position: relative;
-  margin-top: 25px;
+/* Дясна колона с действия */
+.info-col.actions{
+  grid-column: 3;
+  justify-self: end;
+  width: max-content;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  gap: 10px;
+  align-items: flex-end;
+  text-align: right;
 }
 
-.main-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  position: relative;
-  z-index: 2;
+/* === Редове: етикет + стойност === */
+.info-row{
+  display:grid;
+  grid-template-columns: 150px 1fr;
+  align-items:center;
+  column-gap: 6px;
+  margin:6px 0;
+  min-width: 0;
+}
+.info-col .label{
+  justify-self:end;
+  text-align:right;
+  color:#546987;
+  font-weight:700;
+  font-size:18px;
+}
+.info-col .value{
+  justify-self:start;
+  text-align:left;
+  color:var(--brand);
+  font-size:22px;
+  line-height:1.25;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }
 
-.main-buttons button {
-  padding: 12px 24px;
-  font-size: 16px;
-  background-color: #1f4365;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.avg-rating{ margin-bottom:6px; }
+.btn-action{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 14px; border-radius:10px; font-weight:600; text-decoration:none;
+  border:1px solid transparent; cursor:pointer;
+}
+.btn-action.primary{ background:var(--brand); color:#fff; }
+.btn-action.primary:hover{ background:var(--brand-2); }
+.btn-action.secondary{ background:#fff; color:#1f4365; border-color:#cfd8e3; }
+.btn-action.secondary:hover{ background:#f5f7fb; }
+.btn-action.admin{ background:#002147; color:#fff; }
+.btn-action.admin:hover{ background:#003665; }
+
+/* Респонсив */
+@media (max-width: 980px){
+  .profile-right{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px){
+  .profile-container{ grid-template-columns: 1fr; }
+  .profile-right{ grid-template-columns: 1fr; }
+  .info-row{ grid-template-columns: 110px 1fr; }
 }
 
-.main-buttons button:hover {
-  background-color: #546987;
+/* === Заявки за свързване === */
+.connection-requests{ margin-top:20px; padding:15px; background:#f9f9f9; border-radius:10px; }
+.request-card{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.request-card img.avatar{ width:40px; height:40px; border-radius:50%; }
+.request-card form button{ margin-left:10px; padding:5px 10px; border-radius:5px; }
+
+/* === Контроли за обяви === */
+.job-controls{
+  position:relative; margin-top:25px; display:flex; flex-direction:column; align-items:center; gap:20px;
 }
-
-.job-sub-buttons {
-  position: absolute;
-  top: 0;
-  display: flex;
-  gap: 15px;
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-  z-index: 1;
+.main-buttons{ display:flex; justify-content:center; gap:15px; position:relative; z-index:2; }
+.main-buttons button{
+  padding:12px 24px; font-size:16px; background:var(--brand); color:#fff; border:none; border-radius:8px; cursor:pointer;
+  transition: background-color .3s ease;
 }
+.main-buttons button:hover{ background:#546987; }
 
-.job-sub-buttons button {
-  padding: 12px 24px;
-  font-size: 16px;
-  background-color: #546987;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.job-sub-buttons{
+  position:absolute; top:0; display:flex; gap:15px; opacity:0; pointer-events:none;
+  transition: transform .15s ease, opacity .15s ease; z-index:1;
 }
-
-.job-sub-buttons button:hover {
-  background-color: #1f4365;
+.job-sub-buttons button{
+  padding:12px 24px; font-size:16px; background:#546987; color:#fff; border:none; border-radius:8px; cursor:pointer;
 }
+.job-sub-buttons button:hover{ background:var(--brand); }
+/* ляво подменю */
+.job-sub-buttons.all{ right: calc(70% + 1px); transform: translateX(53%); }
+.job-sub-buttons.all.show{ transform: translateX(0); opacity:1; pointer-events:auto; }
+/* дясно подменю */
+.job-sub-buttons.add{ left: calc(70% + 1px); transform: translateX(-53%); }
+.job-sub-buttons.add.show{ transform: translateX(0); opacity:1; pointer-events:auto; }
 
-/* Подменю отляво (плъзгане наляво от „Всички обяви“) */
-.job-sub-buttons.all {
-  right: calc(70% + 1px);
-  transform: translateX(53%);
+/* === Списък с обяви === */
+#jobFormContainer, #jobList{ margin-top:30px; }
+
+.job-card{
+  display:flex; gap:18px; align-items:center; position:relative; cursor:pointer;
+  background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px;
+  margin-bottom:16px; transition: box-shadow .2s ease, transform .05s ease;
+  overflow:hidden;
 }
-
-.job-sub-buttons.all.show {
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto;
+.job-card:hover{ box-shadow:0 10px 30px rgba(0,0,0,.08); }
+.job-card-img{
+  width:140px; height:140px; flex-shrink:0; border-radius:12px; object-fit:cover; background:#f2f4f7;
 }
-
-/* Подменю отдясно (плъзгане надясно от „Добави обява“) */
-.job-sub-buttons.add {
-  left: calc(70% + 1px);
-  transform: translateX(-53%);
+.job-card-info{ flex:1; min-width:0; }
+.job-card-info h3{ margin:0 0 6px; font-size:20px; color:#002147; }
+.job-card-info p{ margin:4px 0; color:#334155; }
+.job-rating{ margin-bottom:6px; }
+.badge-company{
+  display:inline-block; padding:3px 8px; margin-right:8px; font-size:12px; background:var(--brand); color:#fff; border-radius:999px; vertical-align:middle;
 }
-
-.job-sub-buttons.add.show {
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto;
+.profession-chips{ margin:6px 0 8px; display:flex; flex-wrap:wrap; gap:6px; }
+.profession-chips .chip{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 8px;
+  background:var(--chip-bg); border:1px solid var(--chip-br); border-radius:999px; font-size:13px; color:var(--brand);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Формата и обявите */
-#jobFormContainer,
-#jobList {
-    margin-top: 30px;
+.favorite-icon{ position:absolute; top:10px; right:10px; }
+.favorite-icon img{ width:26px; height:26px; transition: transform .15s ease; }
+.favorite-icon img:hover{ transform: scale(1.15); }
+.edit-btn{
+  position:absolute; right:12px; bottom:12px; padding:8px 12px; border:none; border-radius:10px;
+  color:#fff; background:#002147; cursor:pointer;
 }
+.edit-btn:hover{ background:#003665; }
+.job-meta-item.location i,
+.job-meta-item.price-day i,
+.job-meta-item.price-square i { margin-right:6px; color:var(--brand); }
+.hidden{ display:none !important; }
 
-/* Обява в списъка */
-.job-card {
-    position: relative;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 15px;
-    align-items: flex-start;
-    cursor: pointer;
-    transition: box-shadow 0.2s ease;
-    z-index: 1; /* намаляваме приоритета спрямо navbar */
-    position: relative; /* за да работи z-index */
-}
-
-.job-card:hover {
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.job-card img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
-.job-info {
-    flex-grow: 1;
-}
-
-.job-info h4 {
-    margin: 0 0 10px 0;
-}
-
-.edit-btn {
-    background-color: #1f4365;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.edit-btn:hover {
-    background-color: #546987;
-}
-
-
-/* Общ контейнер на формата */
-/* Контейнер за трите колони */
-/* Общ контейнер на формата (нов, едноколонен и чист) */
+/* === Форми (Добави работа/екип/история) === */
 #jobForm{
   display:block;
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 16px;
-  background: #ffffffcc;
-  border: 1px solid #cfd8e3;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(31,67,101,.08);
-  animation: fadeInForm 0.4s ease-in-out;
-  font-family: 'Segoe UI', sans-serif;
+  width:100%;
+  max-width:900px;
+  margin:20px auto;
+  padding:16px;
+  background:#ffffffcc;
+  border:1px solid #cfd8e3;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(31,67,101,.08);
+  animation: fadeInForm .4s ease-in-out;
+  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+  overflow:hidden;
 }
-
-
-/* Общ стил за всяка от трите колони */
-.job-form-column {
-    flex: 1;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Етикети и полета */
-#jobForm label {
-    font-weight: bold;
-    color: #444;
-    margin-bottom: 4px;
-}
-
+#jobForm .section-h{ margin:10px 0 6px; color:#0f172a; }
+#jobForm label{ font-weight:700; color:#444; margin-bottom:6px; display:block; }
 #jobForm input[type="text"],
 #jobForm input[type="number"],
 #jobForm input[type="file"],
+#jobForm input[type="email"],
 #jobForm select,
-#jobForm textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    background-color: #fdfdfd;
-    transition: border-color 0.3s, box-shadow 0.3s;
+#jobForm textarea{
+  width:100%;
+  max-width:100%;
+  padding:12px 14px;
+  border:1px solid #cfd3da;
+  border-radius:10px;
+  font-size:15px;
+  background:#fdfdfd;
+  transition: border-color .2s, box-shadow .2s, background-color .2s;
 }
-
 #jobForm input:focus,
 #jobForm select:focus,
-#jobForm textarea:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    outline: none;
+#jobForm textarea:focus{
+  border-color:var(--focus); box-shadow:0 0 0 3px rgba(59,130,246,.18); outline:none; background:#fff;
+}
+#jobForm textarea{ resize:vertical; min-height:120px; }
+#jobForm button[type="submit"]{
+  padding:12px; font-size:16px; font-weight:700; background:#3b82f6; color:#fff; border:none; border-radius:10px; cursor:pointer; margin-top:18px;
+}
+#jobForm button[type="submit"]:hover{ background:#2563eb; }
+
+.grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.inline{ display:inline-flex; align-items:center; gap:8px; }
+
+/* === Поле Фирма === */
+.company-fields{ margin:10px 0 14px; border:1px solid #cfd8e3; border-radius:12px; padding:14px; background:#fff; }
+.company-fields legend{ padding:0 8px; color:var(--brand); font-weight:700; }
+
+/* === Професии – единен селект === */
+#profession-block{ margin:10px 0 6px; }
+#profession-block .hint{ display:block; margin-top:6px; color:#6b7a90; font-size:12px; }
+#profession_select[multiple]{ height: 240px; padding-top: 8px; }
+#profession_select optgroup{
+  font-style: normal; color:#394b5a; font-weight:700; padding-top:4px;
+}
+#profession_select option{ padding:4px 8px; }
+#profession_select option:checked{ background: rgba(59,130,246,.18) !important; }
+
+/* === Валидация === */
+.invalid{ border-color: var(--danger) !important; background: #fff5f5 !important; }
+.field-error{
+  margin-top:6px; color: var(--danger); font-size: 13px; font-weight:600;
 }
 
-/* Текстово поле */
-#jobForm textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-/* Бутон за запазване */
-#jobForm button[type="submit"] {
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: #3b82f6;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-}
-
-#jobForm button[type="submit"]:hover {
-    background-color: #2563eb;
-}
-
-/* Полета за членове на екип */
-#teamMemberFields input[type="text"] {
-    margin-top: 6px;
-}
-
-/* Преглед на снимки */
-.image-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.image-preview img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-
-@keyframes fadeInForm {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-footer {
-  background-color: #f0f0f0;
-  text-align: center;
-  padding: 15px 10px;
-  font-size: 14px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-
-#active-projects-section {
-    padding: 20px;
-    background: #f8f8f8;
-    border: 1px solid #ddd;
-    margin-top: 20px;
-    border-radius: 10px;
-}
-
-.active-project-card {
-    background: white;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-.timeline {
-    display: flex;
-    gap: 10px;
-    margin: 10px 0;
-}
-
-.timeline .step {
-    padding: 5px 10px;
-    border-radius: 5px;
-    background: #eee;
-}
-
-.timeline .step.done {
-    background: #4caf50;
-    color: white;
-    font-weight: bold;
-}
-
-#ratings-section {
-    margin-top: 40px;
-    background: #fdfdfd;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-}
-
-.rating-card {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.rating-card.given {
-    background: #f8f8f8;
-}
-
-.rating-card span {
-    font-weight: bold;
-    color: #ffa500;
-}
-
-
-.favorite-icon {
-  position: absolute;
-  top: 10px;
-  right: -50px;
-  cursor: pointer;
-  z-index: 10;
-}
-
-.favorite-icon img {
-  width: 28px;
-  height: 28px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.favorite-icon img:hover {
-  transform: scale(1.2);
-  opacity: 0.8;
-}
-
-/* Image manager (Добави работа) */
-.images-field { margin-top: 10px; }
-.images-toolbar {
-  display:flex; align-items:center; gap:10px; margin-bottom:8px;
-}
-
+/* === Снимки === */
+.images-field{ margin-top:10px; }
+.images-toolbar{ display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
 .images-hint{ color:#6b7a90; font-size:13px; }
-
-
 .btn-small{
-  padding:8px 12px; border:1px solid #cfd8e3; background:#fff; color:#1f4365;
+  padding:8px 12px; border:1px solid #cfd8e3; background:#fff; color:var(--brand);
   border-radius:10px; cursor:pointer; font-weight:600;
 }
-.btn-small:hover{ border-color:#1f4365; box-shadow:0 2px 8px rgba(31,67,101,.12); }
-
+.btn-small:hover{ border-color:var(--brand); box-shadow:0 2px 8px rgba(31,67,101,.12); }
 .images-grid{
-  position:relative;
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap:12px;
-  border:2px dashed #cfd8e3;
-  border-radius:14px;
-  padding:12px;
-  min-height:164px;
-  background:#f6f9fc;
+  position:relative; display:grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr));
+  gap:12px; border:2px dashed #cfd8e3; border-radius:14px; padding:12px; min-height:164px; background:#f6f9fc;
   transition: border-color .2s ease, background .2s ease;
 }
 .images-grid:not(.empty){ border-style: solid; }
-.images-grid.dragging{ border-color:#1f4365; background:#f1f6fb; }
+.images-grid.dragging{ border-color:var(--brand); background:#f1f6fb; }
 .images-grid.empty::before{
-  content: attr(data-empty);
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  color:#94a3b8; font-size:14px; text-align:center;
+  content: attr(data-empty); position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); color:#94a3b8; font-size:14px; text-align:center;
 }
-
-.images-grid.dragging{ border-color:#1f4365; }
-.images-grid.empty::before{
-  content: attr(data-empty); position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%); color:#94a3b8; font-size:14px;
+.img-tile{ position:relative; border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 2px 10px rgba(31,67,101,.08); aspect-ratio:1/1; }
+.img-tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+.img-tile .remove-btn{
+  position:absolute; top:8px; right:8px; width:30px; height:30px; border-radius:50%; border:1px solid #cfd8e3; background:#ffffffee; cursor:pointer;
+  line-height:28px; text-align:center; font-weight:700; box-shadow:0 2px 10px rgba(31,67,101,.12); backdrop-filter:saturate(180%) blur(6px);
 }
-
-.img-tile{
-  position:relative;
-  border-radius:12px;
-  overflow:hidden;
-  background:#fff;
-  box-shadow:0 2px 10px rgba(31,67,101,.08);
-  aspect-ratio: 1 / 1;          /* квадратни плочки */
-}
-.img-tile img{
-  width:100%; height:100%;
-  object-fit:cover; display:block;
-}
-
-
-.img-tile .remove-btn,
-.img-tile .cover-btn{
-  position:absolute; top:8px; width:30px; height:30px;
-  border-radius:50%;
-  border:1px solid #cfd8e3; background:#ffffffee; cursor:pointer;
-  line-height:28px; text-align:center; font-weight:700;
-  box-shadow:0 2px 10px rgba(31,67,101,.12);
-  backdrop-filter: saturate(180%) blur(6px);
-}
-.img-tile .remove-btn{ right:8px; }
-.img-tile .cover-btn{ left:8px; color:#1f4365; }
-
-.img-tile.is-cover{
-  outline: 3px solid #1f4365; outline-offset: 0;
-}
+.img-tile.is-cover{ outline:3px solid var(--brand); outline-offset:0; }
 .img-tile .badge{
-  position:absolute; top:8px; left:8px;
-  background:#1f4365; color:#fff; font-size:12px;
-  padding:4px 8px; border-radius:10px;
-  display:none;
+  position:absolute; top:8px; left:8px; background:var(--brand); color:#fff; font-size:12px; padding:4px 8px; border-radius:10px; display:none;
 }
 .img-tile.is-cover .badge{ display:inline-block; }
 
-
-/* --- Multi-professions UI --- */
-.switch-company { display:inline-flex; align-items:center; gap:8px; margin:6px 0 12px; font-weight:600; color:#1f4365; }
-.chips { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 10px; }
-.chip { background:#e9eef5; color:#1f4365; border-radius:18px; padding:6px 10px; font-size:14px; display:inline-flex; align-items:center; gap:6px; }
-.chip .chip-x { border:none; background:transparent; font-size:16px; line-height:1; cursor:pointer; color:#546987; }
-.chips-hint { color:#94a3b8; font-size:14px; }
-
-/* Modal */
-.modal-backdrop { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.5); z-index:9999; }
-.modal-panel { width:min(720px, 94vw); background:#fff; border-radius:12px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.2); }
-.modal-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
-.modal-head h3 { margin:0; color:#1f4365; }
-.modal-head input { flex:1; padding:8px 10px; border:1px solid #cfd8e3; border-radius:8px; }
-.modal-body { max-height:56vh; overflow:auto; border:1px solid #e5e7eb; border-radius:8px; padding:8px; }
-.prof-row { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:8px; cursor:pointer; }
-.prof-row:hover { background:#f3f6fb; }
-.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:10px; }
-.btn-small.primary { background:#1f4365; color:#fff; }
-
-/* Маркер „Фирма“ */
-.badge-company{
-  display:inline-block;
-  margin-right:8px;
-  padding:2px 8px;
-  font-size:12px;
-  border-radius:10px;
-  background:#1f4365;
-  color:#fff;
-  vertical-align:middle;
+@keyframes fadeInForm{
+  from{ opacity:0; transform:translateY(20px); }
+  to{ opacity:1; transform:translateY(0); }
 }
 
-/* Чипове с професии */
-.profession-chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin:.25rem 0 .5rem;
+/* === Активни проекти === */
+#active-projects-section{ padding:20px; background:#f8f8f8; border:1px solid #ddd; margin-top:20px; border-radius:10px; }
+.active-project-card{ background:#fff; padding:15px; margin-bottom:20px; border:1px solid #ccc; border-radius:8px; }
+.timeline{ display:flex; gap:10px; margin:10px 0; }
+.timeline .step{ padding:5px 10px; border-radius:5px; background:#eee; }
+.timeline .step.done{ background:#4caf50; color:#fff; font-weight:700; }
+
+/* === История (стари проекти) === */
+.history-section{ margin:30px 0 120px; }
+.history-section > h2{ margin:0 0 12px; color:#f90; }
+.history-list{ display:grid; grid-template-columns:1fr; gap:14px; }
+.history-card{
+  display:flex; gap:14px; align-items:flex-start; background:#fff; border:1px solid #cfd8e3; border-radius:12px; padding:12px;
+  box-shadow:0 6px 18px rgba(31,67,101,.06);
+  overflow:hidden;
 }
-.profession-chips .chip{
-  padding:4px 8px;
-  border-radius:10px;
-  border:1px solid #cfd8e3;
-  background:#f5f7fb;
-  font-size:12px;
-  color:#1f4365;
+.history-cover{ width:140px; height:140px; object-fit:cover; border-radius:10px; flex-shrink:0; background:#f2f4f7; }
+.history-info{ min-width:0; }
+.history-info h3{ margin:0 0 6px; color:#002147; }
+.history-meta{ display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+.history-meta .chip{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 8px;
+  background:#eef2f7; border:1px solid #d6deea; border-radius:999px; font-size:13px; color:var(--brand);
+}
+.history-desc{ margin:6px 0 10px; color:#334155; }
+.history-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap:8px; }
+.history-grid img{ width:100%; height:100px; object-fit:cover; border-radius:8px; }
+
+/* === Footer === */
+footer{
+  background:#f0f0f0; text-align:center; padding:15px 10px; font-size:14px;
+  position:fixed; bottom:0; left:0; width:100%;
 }
 
+/* === Плащания: новият UI === */
+.payments-block{
+  margin:12px 0 14px; border:1px solid #cfd8e3; border-radius:12px; padding:12px; background:#fff;
+}
+.payments-block legend{ padding:0 6px; color:var(--brand); font-weight:700; }
 
-/* Поле за множествен избор на професии */
-.prof-list{
+.payments-grid{
   display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
-  gap:8px;
-  margin:.5rem 0 0.5rem;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:10px;
 }
-.prof-item{
-  padding:6px 10px;
-  border:1px solid #cfd8e3;
-  background:#fff;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:14px;
-  text-align:left;
+@media (max-width: 900px){
+  .payments-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
-.prof-item:hover{ border-color:#1f4365; box-shadow:0 1px 6px rgba(31,67,101,.12); }
-.prof-item.selected{ opacity:.5; cursor:default; }
-
-#prof-search{
-  width:100%;
-  padding:8px 10px;
-  border:1px solid #cfd8e3;
-  border-radius:8px;
-  font-size:14px;
+@media (max-width: 560px){
+  .payments-grid{ grid-template-columns: 1fr; }
 }
 
-/* Чипове + Х */
-.profession-chips{ display:flex; flex-wrap:wrap; gap:6px; margin:.25rem 0 .5rem; }
-.profession-chips .chip{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:4px 8px;
-  border-radius:10px;
-  border:1px solid #cfd8e3;
-  background:#f5f7fb;
-  font-size:12px;
-  color:#1f4365;
+.pm-item{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; padding:10px 12px; border:1px solid var(--chip-br);
+  border-radius:12px; background:#f8fafc; cursor:pointer;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .02s ease;
 }
-.profession-chips .chip-x{
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  font-size:14px;
-  line-height:1;
-}
-
-.inline { display:inline-flex; align-items:center; gap:8px; margin:8px 0; }
-
-.multi-profession { border:1px solid #ccc; border-radius:8px; padding:10px; background:#fff; }
-.chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
-.chip { background:#eef3ff; border:1px solid #bcd; border-radius:16px; padding:4px 10px; font-size:13px; }
-.chip button { margin-left:6px; border:none; background:transparent; cursor:pointer; font-size:14px; }
-
-.suggestions { display:none; margin-top:6px; border:1px solid #ddd; border-radius:6px; max-height:160px; overflow:auto; background:#fff; }
-.suggestions div { padding:6px 10px; cursor:pointer; }
-.suggestions div:hover { background:#f0f6ff; }
-
-/* вече ги има, но за всеки случай: */
-.badge-company { display:inline-block; background:#1f4365; color:#fff; border-radius:6px; padding:2px 6px; font-size:12px; margin-right:6px; }
-.profession-chips { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
-.profession-chips .chip { background:#eef3ff; border:1px solid #bcd; }
-
-
-.badge-company{
-  display:inline-block;
-  margin-right:8px;
-  padding:2px 8px;
-  font-size:12px;
-  background:#1f4365;
-  color:#fff;
-  border-radius:999px;
-  vertical-align:middle;
-}
-
-.profession-chips{
-  margin:6px 0 8px 0;
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-.profession-chips .chip,
-.chips .chip{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:4px 8px;
-  background:#eef2f7;
-  border:1px solid #d6deea;
-  border-radius:999px;
-  font-size:13px;
-  color:#1f4365;
-}
-.chips .chip button{
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  font-size:14px;
-  line-height:1;
-  color:#6b7a90;
-}
-
-.prof-suggestions{
-  position:relative;
-  margin-top:4px;
-  max-height:200px;
-  overflow:auto;
-  border:1px solid #d6deea;
-  border-radius:8px;
-  background:#fff;
+.pm-item:active{ transform: scale(.997); }
+.pm-item .pm-label{ font-weight:700; color:#223247; user-select:none; }
+.pm-item .pm-price{
   display:none;
+  width:160px; max-width:45%;
+  padding:10px 12px; border:1px solid #cfd3da; border-radius:10px; background:#fff;
 }
-.prof-suggestions > div{
-  padding:8px 10px;
-  cursor:pointer;
+.pm-item.on{
+  background:#eef6ff;
+  border-color: var(--focus);
+  box-shadow: inset 0 0 0 2px rgba(59,130,246,.15);
 }
-.prof-suggestions > div:hover{
-  background:#f3f6fb;
+.pm-item.on .pm-price{ display:block; }
+.pm-item:focus{ outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,.22); }
+
+.pm-item .pm-price:focus{
+  border-color:var(--focus);
+  box-shadow:0 0 0 3px rgba(59,130,246,.18);
+  outline:none;
 }
+
+/* Списъци в картите */
+.payment-list{ display:flex; flex-direction:column; gap:4px; margin:6px 0; }
+.job-pay-item{ display:flex; align-items:center; gap:6px; color:#334155; }
+.job-pay-item strong{ color:#0f172a; }
+.job-pay-item i{ margin-right:6px; color:var(--brand); }
+
+/* === Профил / списък с обяви: дясна колона с действия === */
+#jobList .job-card{ position:relative; }
+#jobList .job-side{
+  position:absolute; top:8px; right:8px;
+  display:flex; flex-direction:column; align-items:flex-end; gap:8px;
+}
+#jobList .job-side .favorite-icon{ position:static; }
+#jobList .job-side .edit-btn{
+  position:static; text-decoration:none;
+  padding:8px 12px; border:none; border-radius:10px;
+  color:#fff; background:#002147; cursor:pointer;
+}
+#jobList .job-side .edit-btn:hover{ background:#003665; }
+#jobList .job-side .delete-btn{ background:transparent; border:none; padding:0; cursor:pointer; }
+#jobList .job-side .trash-icon{ width:26px; height:26px; display:block; transition:transform .15s ease; }
+#jobList .job-side .trash-icon:hover{ transform:scale(1.08); }
+
+/* Без описание в картите на профила */
+#jobList .job-desc{ display:none !important; }
+
+/* Респонсив за форми */
+@media (max-width: 740px){
+  .grid-2{ grid-template-columns: 1fr; }
+  #profession_select[multiple]{ height: 200px; }
+  .images-grid{ grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); }
+}
+
+/* ================== Добави история – стилове ================== */
+.history-form{
+  display:block; max-width:1000px; margin:20px auto;
+  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+}
+
+.hf-card{
+  background:#ffffffcc; border:1px solid #cfd8e3;
+  border-radius:16px; box-shadow:0 8px 24px rgba(31,67,101,.08);
+  padding:16px;
+}
+
+.hf-header{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;
+}
+.hf-title{ display:flex; align-items:center; gap:12px; }
+.hf-title i{ font-size:22px; color:var(--brand); }
+.hf-title h3{ margin:0; color:#0f172a; }
+.hf-sub{ margin:2px 0 0; font-size:13px; color:#6b7a90; }
+
+.hf-submit{
+  padding:10px 14px; font-weight:700; border:none; border-radius:10px; cursor:pointer;
+  background:#3b82f6; color:#fff;
+}
+.hf-submit:hover{ background:#2563eb; }
+.hf-footer{ margin-top:10px; display:flex; justify-content:flex-end; }
+
+.hf-grid{
+  display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:6px;
+}
+.hf-col{ display:flex; flex-direction:column; gap:12px; }
+
+.hf-field label{
+  display:block; font-weight:700; color:#444; margin-bottom:6px;
+}
+.hf-field input[type="text"],
+.hf-field input[type="date"],
+.hf-field select,
+.hf-field textarea{
+  width:100%; padding:12px 14px; border:1px solid #cfd3da; border-radius:10px; font-size:15px; background:#fdfdfd;
+  transition: border-color .2s, box-shadow .2s, background-color .2s;
+}
+.hf-field textarea{ min-height:140px; resize:vertical; }
+.hf-field input:focus,
+.hf-field select:focus,
+.hf-field textarea:focus{
+  border-color:var(--focus); box-shadow:0 0 0 3px rgba(59,130,246,.18); outline:none; background:#fff;
+}
+
+/* Дати в две колонки */
+.hf-dates{
+  display:grid; grid-template-columns: 1fr 1fr; gap:12px;
+}
+
+/* Индикация за грешка */
+.history-form .invalid{
+  border-color: var(--danger) !important; background: #fff5f5 !important;
+}
+.history-form .field-error{
+  margin-top:6px; color: var(--danger); font-size: 13px; font-weight:600;
+}
+
+/* Снимки – реюзваме общите, само лека рамка към картата */
+.history-form .images-field{ margin-top:6px; }
+.history-form .images-grid{
+  border-radius:14px;
+}
+
+/* Респонсив */
+@media (max-width: 880px){
+  .hf-grid{ grid-template-columns: 1fr; }
+  .hf-header{ flex-direction:column; align-items:flex-start; }
+  .hf-footer{ justify-content:flex-start; }
+}
+
+/* Подзаглавие (кратко описание) в картите на профила */
+.job-card-info .job-subtitle{
+  margin: 2px 0 6px;
+  color:#374151;         /* малко по-тъмен */
+  font-size:20px;        /* по-голям от 14px */
+  line-height:1.4;
+  font-weight:500;       /* леко удебелено */
+}
+
 

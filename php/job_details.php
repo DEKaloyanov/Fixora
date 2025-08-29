@@ -2,165 +2,351 @@
 require 'db.php';
 require_once 'rating_utils.php';
 require_once 'favorites_utils.php';
+require_once __DIR__ . '/label_utils.php';
 session_start();
 
-
 $job_id = $_GET['id'] ?? $_GET['job_id'] ?? null;
+if (!$job_id) { echo "Липсва ID на обявата."; exit; }
+$id = (int)$job_id;
 
-if (!$job_id) {
-    echo "Липсва ID на обявата.";
-    exit;
-}
-$id = (int) $job_id;
-
-
-$stmt = $conn->prepare("SELECT j.*, u.username FROM jobs j JOIN users u ON j.user_id = u.id WHERE j.id = ?");
+$stmt = $conn->prepare("
+  SELECT j.*,
+         u.username,
+         u.profile_image,
+         u.ime, u.familiq
+  FROM jobs j
+  JOIN users u ON j.user_id = u.id
+  WHERE j.id = ?
+  LIMIT 1
+");
 $stmt->execute([$id]);
 $job = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$job) { echo "Обявата не е намерена."; exit; }
 
-if (!$job) {
-    echo "Обявата не е намерена.";
-    exit;
+$isSeek  = ($job['job_type'] === 'seek');
+$images  = json_decode($job['images'] ?? '[]', true) ?: [];
+
+/* Етикети/заглавия */
+$profKey  = (string)($job['profession'] ?? '');
+$profLbl  = job_label($profKey) ?: 'Обява';
+
+/* Кратко описание (subtitle) — показваме само ако е валидно */
+$rawTitle = trim((string)($job['title'] ?? ''));
+$subtitle = '';
+if ($rawTitle !== '') {
+  $rawLower   = mb_strtolower($rawTitle, 'UTF-8');
+  $keyLower   = mb_strtolower($profKey,  'UTF-8');
+  $labelLower = mb_strtolower($profLbl,  'UTF-8');
+  $looksLikeKey = (bool)preg_match('/^[a-z0-9_-]+$/', $rawTitle);
+
+  if ($rawLower !== $keyLower && $rawLower !== $labelLower && !$looksLikeKey) {
+    $subtitle = $rawTitle;
+  }
 }
 
-// Подготовка на изображенията
-$images = json_decode($job['images'], true);
+/* аватар по подразбиране */
+$defaultOffer  = '../img/ChatGPT Image Aug 6, 2025, 03_15_37 PM.png';
+$defaultAvatar = '../img/ChatGPT Image Aug 6, 2025, 03_15_39 PM.png';
+$ownerAvatar = (!empty($job['profile_image']) && file_exists(__DIR__ . '/../uploads/' . $job['profile_image']))
+  ? '../uploads/' . $job['profile_image']
+  : $defaultAvatar;
+
+/* ГАЛЕРИЯ (премахната за seek) */
+$galleryImages = [];
+if (!$isSeek) {
+  if (!empty($images)) {
+    foreach ($images as $p) $galleryImages[] = '../' . ltrim($p, '/');
+  } else {
+    $galleryImages = [$defaultOffer];
+  }
+}
+$mainImage = $galleryImages[0] ?? $defaultOffer;
+
+/* плащания – чипове */
+function render_payment_chips(array $job): string {
+  $pm = [];
+  if (!empty($job['payment_methods'])) {
+    $decoded = json_decode($job['payment_methods'], true);
+    if (is_array($decoded)) $pm = $decoded;
+  }
+  $types = $pm['types'] ?? [];
+
+  if (!$types) {
+    if (!empty($job['price_per_day']))    $types['day']    = (float)$job['price_per_day'];
+    if (!empty($job['price_per_square'])) $types['square'] = (float)$job['price_per_square'];
+  }
+  if (!$types) return '';
+
+  $labels = [
+    'day'            => ['Надник',            'fa-coins',          ' лв/ден'],
+    'square'         => ['Цена/кв.м',         'fa-ruler-combined', ' лв/кв.м'],
+    'hour'           => ['Цена на час',       'fa-clock',          ' лв/час'],
+    'project'        => ['Цена за проект',    'fa-briefcase',      ' лв/проект'],
+    'linear'         => ['Цена/л.м',          'fa-ruler-horizontal',' лв/л.м'],
+    'piece'          => ['Цена/бр.',          'fa-hashtag',        ' лв/бр.'],
+    'per_point'      => ['Ел. точка',         'fa-plug',           ' лв/бр.'],
+    'per_fixture'    => ['ВиК арматура',      'fa-faucet',         ' лв/бр.'],
+    'per_window'     => ['Прозорец',          'fa-border-none',    ' лв/бр.'],
+    'per_door'       => ['Врата',             'fa-door-closed',    ' лв/бр.'],
+    'per_m3'         => ['Обем',              'fa-cube',           ' лв/м³'],
+    'per_ton'        => ['Тонаж',             'fa-weight-hanging', ' лв/тон'],
+    'tile_m2'        => ['Плочки',            'fa-th',             ' лв/м²'],
+    'plaster_m2'     => ['Шпакловка/мазилка', 'fa-align-left',     ' лв/м²'],
+    'paint_m2'       => ['Боядисване',        'fa-paint-roller',   ' лв/м²'],
+    'insulation_m2'  => ['Изолация',          'fa-layer-group',    ' лв/м²'],
+    'callout_fee'    => ['Такса посещение',   'fa-taxi',           ' лв'],
+    'min_charge'     => ['Мин. такса',        'fa-euro-sign',      ' лв'],
+  ];
+
+  $out = [];
+  foreach ($types as $k => $v) {
+    $def = $labels[$k] ?? [$k, 'fa-tag', ''];
+    $val = is_numeric($v) ? number_format((float)$v, 2, '.', '') : (string)$v;
+    $out[] = '<span class="jd-chip"><i class="fas ' . $def[1] . '"></i>'
+           . htmlspecialchars($def[0]) . ': <strong>' . htmlspecialchars($val . $def[2]) . '</strong></span>';
+  }
+
+  return '<div class="jd-chips">' . implode('', $out) . '</div>';
+}
+
+/* безопасен текст */
+function esc($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+
+/* град/локация */
+$place = $job['city'] ?: $job['location'];
+$region= $job['region'] ?? '';
+
+/* фирма (ако има JSON) */
+$company = null;
+if (!empty($job['company_json'])) {
+  $tmp = json_decode($job['company_json'], true);
+  if (is_array($tmp)) $company = $tmp;
+}
+
+/* Екип (покажи при seek, ако има размер или списък) */
+$team_members = [];
+if (!empty($job['team_members'])) {
+  $tm = json_decode($job['team_members'], true);
+  if (is_array($tm)) $team_members = $tm;
+}
+$hasTeamData = $isSeek && ( (!empty($job['team_size'])) || !empty($team_members) );
+
+/* заглавие на таба */
+$pageTitle = $profLbl . ($subtitle !== '' ? ' — '.$subtitle : '') . ' | Fixora-Build';
 ?>
 <!DOCTYPE html>
 <html lang="bg">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Детайли за обявата - Fixora</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .job-details {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        .job-images {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .job-images img {
-            max-width: 200px;
-            height: auto;
-            border-radius: 4px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 8px 16px;
-            background: #002147;
-            color: #fff;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title><?= esc($pageTitle) ?></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/job_details.css?v=<?= time() ?>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-
 <body>
 
-    <div class="job-details">
-        <a href="javascript:history.back()" class="back-btn">⬅ Назад</a>
+<?php if (file_exists(__DIR__.'/navbar.php')) include 'navbar.php'; ?>
 
-        <h2 style="display: flex; align-items: center; justify-content: space-between;">
-            <span><?php echo htmlspecialchars($job['profession']); ?></span>
-            <?php
-            if (isset($_SESSION['user'])) {
-                $isFavorite = isJobFavorite($conn, $_SESSION['user']['id'], $job['id']);
-                $icon = $isFavorite ? '../img/heart-filled.png' : '../img/heart-outline.png';
-                $alt = $isFavorite ? 'Премахни от любими' : 'Добави в любими';
-                echo '<img src="' . $icon . '" alt="' . $alt . '" title="' . $alt . '" class="favorite-heart" data-job-id="' . $job['id'] . '" style="width: 28px; height: 28px; cursor: pointer;">';
+<main class="jd-wrap">
+  <div class="jd-topbar">
+    <a href="javascript:history.back()" class="jd-back"><i class="fas fa-arrow-left"></i> Назад</a>
+    <button id="jdCopyLink" class="jd-copy" data-url="<?= esc((isset($_SERVER['HTTPS'])?'https':'http').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>">
+      <i class="fas fa-link"></i> Копирай линк
+    </button>
+  </div>
 
-            }
-            ?>
-        </h2>
-        <p><strong>Тип обява:</strong> <?php echo $job['job_type'] === 'offer' ? 'Предлагам работа' : 'Търся работа'; ?>
-        </p>
-        <p><strong>Град:</strong> <?php echo htmlspecialchars($job['city'] ?? $job['location']); ?></p>
-        <?php if ($job['price_per_day']): ?>
-            <p><strong>Надник:</strong> <?php echo $job['price_per_day']; ?> лв</p>
-        <?php endif; ?>
-        <?php if ($job['price_per_square']): ?>
-            <p><strong>Цена на кв.м:</strong> <?php echo $job['price_per_square']; ?> лв</p>
-        <?php endif; ?>
-        <?php if ($job['work_status'] === 'team' && $job['team_members']): ?>
-            <p><strong>Екип от:</strong> <?php echo $job['team_size']; ?> човека</p>
-            <p><strong>Имена:</strong> <?php echo implode(", ", json_decode($job['team_members'], true)); ?></p>
-        <?php endif; ?>
-
-        <?php if (!empty($images)): ?>
-            <div class="job-images">
-                <?php foreach ($images as $img): ?>
-                    <img src="../<?php echo htmlspecialchars($img); ?>" alt="Снимка">
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-
-        <p><strong>Описание:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
-        <p><strong>Собственик:</strong>
-            <a href="public_profile.php?id=<?= $job['user_id'] ?>">
-                <?= htmlspecialchars($job['username']) ?>
-            </a>
-        </p>
-
-        <?php
-
-        if (isset($_SESSION['user']) && $_SESSION['user']['id'] !== $job['user_id']) {
-            // Проверка дали вече има изпратена заявка
-            $check = $conn->prepare("SELECT * FROM connection_requests WHERE sender_id = ? AND receiver_id = ? AND job_id = ?");
-            $check->execute([$_SESSION['user']['id'], $job['user_id'], $job['id']]);
-            $existing = $check->fetch();
-
-            if (!$existing) {
-                echo '<form action="send_request.php" method="POST" style="margin-top: 20px;">
-                    <input type="hidden" name="job_id" value="' . $job['id'] . '">
-                    <input type="hidden" name="owner_id" value="' . $job['user_id'] . '">
-                    <button type="submit" style="padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px;">
-                        📩 Интересувам се
-                    </button>
-                </form>';
-            } else {
-                echo '<p style="margin-top: 20px; color: gray;">Вече сте изпратили заявка за тази обява.</p>';
-            }
-        }
-        ?>
-
-        <hr>
-        <h3>⭐ Оценки и коментари:</h3>
-        <?php
-        $ratings = getRatingsForJob($job['id']);
-        if (count($ratings) === 0) {
-            echo "<p>Все още няма оценки за тази обява.</p>";
-        } else {
-            foreach ($ratings as $r) {
-                echo '<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">';
-                echo '<strong>' . htmlspecialchars($r['ime'] . ' ' . $r['familiq']) . '</strong><br>';
-                echo number_format($r['rating'], 2) . ' / 5<br>';
-                if (!empty($r['comment'])) {
-                    echo '<em>' . nl2br(htmlspecialchars($r['comment'])) . '</em>';
-                }
-                echo '</div>';
-            }
-        }
-        ?>
-
-
+  <div class="jd-title-row">
+    <h1 class="jd-title"><?= esc($profLbl) ?></h1>
+    <div class="jd-title-rt">
+      <span class="jd-type <?= $isSeek ? 'seek' : 'offer' ?>">
+        <?= $isSeek ? 'Търся работа' : 'Предлагам работа' ?>
+      </span>
+      <?php if (isset($_SESSION['user'])):
+        $isFavorite = isJobFavorite($conn, $_SESSION['user']['id'], $job['id']);
+        $icon = $isFavorite ? '../img/heart-filled.png' : '../img/heart-outline.png';
+        $alt  = $isFavorite ? 'Премахни от любими' : 'Добави в любими';
+      ?>
+        <img class="favorite-heart jd-heart-inline"
+             data-job-id="<?= (int)$job['id'] ?>"
+             src="<?= esc($icon) ?>"
+             alt="<?= esc($alt) ?>"
+             title="<?= esc($alt) ?>">
+      <?php endif; ?>
     </div>
+  </div>
 
-    <script src="../js/favorites.js" defer></script>
+  <?php if ($subtitle !== ''): ?>
+    <div class="jd-subtitle"><?= esc($subtitle) ?></div>
+  <?php endif; ?>
 
+  <div class="jd-meta">
+    <?php if (!empty($region)): ?>
+      <span class="jd-meta-item"><i class="fas fa-map"></i> <?= esc($region) ?></span>
+    <?php endif; ?>
+    <?php if (!empty($place)): ?>
+      <span class="jd-meta-item"><i class="fas fa-map-marker-alt"></i> <?= esc($place) ?></span>
+    <?php endif; ?>
+    <span class="jd-meta-item"><i class="far fa-calendar-alt"></i> Публикувана: <?= esc(date('d.m.Y', strtotime($job['created_at'] ?? 'now'))) ?></span>
+    <span class="jd-meta-item">
+      <i class="fas fa-user"></i>
+      Собственик:
+      <a href="public_profile.php?id=<?= (int)$job['user_id'] ?>"><?= esc($job['username']) ?></a>
+    </span>
+  </div>
 
+  <section class="jd-grid <?= $isSeek ? 'jd-grid--seek' : '' ?>">
+    <?php if (!$isSeek): ?>
+      <!-- Галерия (само за Предлагам работа) -->
+      <div class="jd-gallery" id="jdGallery" data-images='<?= esc(json_encode($galleryImages, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)) ?>'>
+        <div class="jd-main-img">
+          <?php if (count($galleryImages) > 1): ?>
+            <button class="jd-g-nav jd-g-prev" type="button" aria-label="Предишно"><span></span></button>
+          <?php endif; ?>
 
+          <img id="jdMainImage" src="<?= esc($mainImage) ?>" alt="Обява" data-index="0">
+
+          <?php if (count($galleryImages) > 1): ?>
+            <button class="jd-g-nav jd-g-next" type="button" aria-label="Следващо"><span></span></button>
+          <?php endif; ?>
+        </div>
+
+        <?php if (!empty($galleryImages) && count($galleryImages) > 1): ?>
+          <div class="jd-thumbs">
+            <?php foreach ($galleryImages as $i => $src): ?>
+              <img class="jd-thumb <?= $i===0 ? 'active' : '' ?>"
+                   src="<?= esc($src) ?>"
+                   alt="thumb"
+                   data-index="<?= (int)$i ?>"
+                   data-src="<?= esc($src) ?>">
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
+      </div>
+    <?php else: ?>
+      <!-- SEEK Хедър-карта: без снимки -->
+      <div class="jd-seek-card">
+        <div class="jd-seek-icon"><i class="fas fa-briefcase"></i></div>
+        <div class="jd-seek-text">
+          <h3>Кандидат/Екип търси работа</h3>
+          <p>Обява от тип „Търся работа“. Няма прикачени снимки към обявата.</p>
+          <?php if ($hasTeamData): ?>
+            <div class="jd-seek-team">
+              <div><i class="fas fa-users"></i> <strong>Брой хора:</strong> <?= (int)($job['team_size'] ?? 0) ?></div>
+              <?php if (!empty($team_members)): ?>
+                <div><i class="fas fa-id-badge"></i> <strong>Имена:</strong> <?= esc(implode(', ', $team_members)) ?></div>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+    <?php endif; ?>
+
+    <!-- Детайли/описание/цени -->
+    <aside class="jd-side">
+      <?php
+        $chips = render_payment_chips($job);
+        if ($chips) {
+          echo '<h3 class="jd-side-h">Заплащане</h3>';
+          echo $chips;
+        }
+      ?>
+
+      <?php if (!empty($job['description'])): ?>
+        <h3 class="jd-side-h">Описание</h3>
+        <div class="jd-desc"><?= nl2br(esc($job['description'])) ?></div>
+      <?php endif; ?>
+
+      <?php if ($hasTeamData): ?>
+        <h3 class="jd-side-h">Екип</h3>
+        <?php if (!empty($job['team_size'])): ?>
+          <p><strong>Брой:</strong> <?= (int)$job['team_size'] ?></p>
+        <?php endif; ?>
+        <?php if (!empty($team_members)): ?>
+          <p><strong>Имена:</strong> <?= esc(implode(', ', $team_members)) ?></p>
+        <?php endif; ?>
+      <?php endif; ?>
+
+      <?php if (is_array($company) && (!empty($company['name']) || !empty($company['logo']))): ?>
+        <h3 class="jd-side-h">Фирма</h3>
+        <div class="jd-owner-card">
+          <?php if (!empty($company['logo'])): ?>
+            <img src="<?= esc('../'.ltrim($company['logo'],'/')) ?>" alt="Лого" class="jd-owner-avatar">
+          <?php else: ?>
+            <img src="<?= esc($ownerAvatar) ?>" alt="Потребител" class="jd-owner-avatar">
+          <?php endif; ?>
+          <div>
+            <div class="jd-owner-name"><?= esc($company['name'] ?? '') ?></div>
+            <?php if (!empty($company['contacts']['website'])): ?>
+              <a class="jd-owner-link" href="<?= esc($company['contacts']['website']) ?>" target="_blank" rel="noopener">Уебсайт</a>
+            <?php endif; ?>
+            <?php if (!empty($company['contacts']['phone'])): ?>
+              <div class="jd-muted"><i class="fas fa-phone"></i> <?= esc($company['contacts']['phone']) ?></div>
+            <?php endif; ?>
+            <?php if (!empty($company['contacts']['email'])): ?>
+              <div class="jd-muted"><i class="fas fa-envelope"></i> <?= esc($company['contacts']['email']) ?></div>
+            <?php endif; ?>
+          </div>
+        </div>
+      <?php else: ?>
+        <div class="jd-owner-card">
+          <img src="<?= esc($ownerAvatar) ?>" alt="Потребител" class="jd-owner-avatar">
+          <div>
+            <div class="jd-owner-name"><?= esc(trim(($job['ime'] ?? '').' '.($job['familiq'] ?? ''))) ?></div>
+            <a class="jd-owner-link" href="public_profile.php?id=<?= (int)$job['user_id'] ?>">Виж профила</a>
+          </div>
+        </div>
+      <?php endif; ?>
+
+      <div class="jd-rating-summary">
+        <?= getJobAverageRating($job['id'], true) ?>
+      </div>
+    </aside>
+  </section>
+
+  <section class="jd-reviews">
+    <h3>⭐ Оценки и коментари</h3>
+    <?php
+      $ratings = getRatingsForJob($job['id']);
+      if (!$ratings || count($ratings) === 0) {
+        echo '<p class="jd-muted">Все още няма оценки за тази обява.</p>';
+      } else {
+        foreach ($ratings as $r) {
+          echo '<article class="jd-review">';
+            echo '<header class="jd-review-h">';
+              echo '<strong>'.esc($r['ime'].' '.$r['familiq']).'</strong>';
+              echo '<span class="jd-review-score">'.number_format((float)$r['rating'], 2).'/5</span>';
+            echo '</header>';
+            if (!empty($r['comment'])) {
+              echo '<div class="jd-review-txt"><em>'.nl2br(esc($r['comment'])).'</em></div>';
+            }
+          echo '</article>';
+        }
+      }
+    ?>
+  </section>
+</main>
+
+<!-- Лайтбокс (ще остане скрит за seek, защото няма галерия) -->
+<div id="jdLightbox" class="jd-lb hidden" aria-hidden="true">
+  <div class="jd-lb-backdrop"></div>
+  <div class="jd-lb-shell" role="dialog" aria-modal="true" aria-label="Преглед на изображение">
+    <div class="jd-lb-toolbar">
+      <button class="jd-lb-btn jd-lb-prev" type="button" title="Предишно (←)">‹</button>
+      <button class="jd-lb-btn jd-lb-next" type="button" title="Следващо (→)">›</button>
+      <span class="jd-lb-flex"></span>
+      <button class="jd-lb-btn jd-lb-zoom-out" type="button" title="Намали (−)">−</button>
+      <button class="jd-lb-btn jd-lb-zoom-in"  type="button" title="Увеличи (+)">+</button>
+      <button class="jd-lb-btn jd-lb-zoom-reset" type="button" title="100%">100%</button>
+      <a class="jd-lb-btn jd-lb-download" id="jdLbDownload" title="Свали" download>⭳</a>
+      <button class="jd-lb-btn jd-lb-close" type="button" title="Затвори (Esc)">✕</button>
+    </div>
+    <div class="jd-lb-stage" id="jdLbStage">
+      <img id="jdLbImage" src="" alt="Голямо изображение">
+    </div>
+  </div>
+</div>
+
+<script src="../js/job_details.js?v=<?= time() ?>" defer></script>
+<script src="../js/favorites.js" defer></script>
 </body>
-
 </html>

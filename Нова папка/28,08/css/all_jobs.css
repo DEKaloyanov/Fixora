@@ -1,0 +1,183 @@
+/* ============ БАЗА ============ */
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --ink:#1f2a37;
+  --muted:#5b6b7a;
+  --brand:#1f4365;
+  --brand-2:#15314a;
+  --line:#e6e9ee;
+  --chip-bg:#eef2f7;
+  --chip-br:#d6deea;
+  --filters-bottom-gap: 80px;
+}
+
+*{ box-sizing:border-box; }
+html, body { height: 100%; overflow-x: hidden; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif;
+}
+
+/* ============ LAYOUT ============ */
+.jobs-page{
+  max-width:1300px;
+  margin:20px auto;
+  padding:0 16px;
+  display:grid;
+  grid-template-columns: 340px 1fr;
+  gap:20px;
+}
+@media (max-width: 960px){
+  .jobs-page{ grid-template-columns: 1fr; }
+}
+
+/* ============ ФИЛТРИ ============ */
+.filters-panel{
+  align-self:start;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 8px 28px rgba(0,0,0,.06);
+  position: sticky;
+  top: calc(var(--nav-height,64px) + 12px);
+  overflow: visible;
+  max-width: 100%;
+}
+.filters-panel__inner{
+  display:flex; flex-direction:column;
+  max-height: calc(100vh - var(--nav-height,64px) - 24px - var(--filters-bottom-gap));
+  overflow-y:auto; overflow-x:hidden;
+  padding:0;
+  scrollbar-gutter: stable both-edges;
+}
+.filters-panel__header{
+  position: sticky; top: 0; z-index: 2;
+  background: var(--card);
+  padding: 12px 16px;
+  border-bottom:1px solid var(--line);
+}
+.filters-panel__header h2{ margin:0; font-size:18px; font-weight:700; color:var(--brand); }
+
+.filter-group{ padding:12px 16px; }
+.filter-group + .filter-group{ border-top:1px solid var(--line); }
+.filter-group h3{
+  margin:6px 0 8px; font-size:14px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.02em;
+}
+
+.form-row{ display:flex; flex-direction:column; gap:6px; margin:8px 0; }
+.form-label{ font-size:14px; color:var(--muted); }
+
+.form-row select,
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row input[type="date"]{
+  width:100%; max-width:100%;
+  padding:10px 12px;
+  border:1px solid var(--line); border-radius:10px;
+  background:#fff; font-size:14px; outline:none;
+}
+.form-row select:focus,
+.form-row input:focus{ border-color:#c4d0dc; box-shadow:0 0 0 3px rgba(31,67,101,.08); }
+
+.checkbox-chip{
+  display:inline-flex; align-items:center; gap:8px; padding:8px 12px; margin-top:6px;
+  background:#fff; border:1px solid var(--line); border-radius:999px; cursor:pointer; user-select:none;
+}
+.checkbox-chip input{ transform:scale(1.05); }
+
+.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+@media (max-width: 480px){ .grid-2{ grid-template-columns:1fr; } }
+
+.filters-actions{
+  position: sticky; bottom:0; z-index:2;
+  display:flex; gap:10px; padding:12px 16px; margin-top:12px;
+  background: linear-gradient(to top, var(--card) 70%, rgba(255,255,255,0));
+  border-top:1px solid var(--line);
+}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 14px; border-radius:10px; cursor:pointer; font-size:14px; border:1px solid transparent;
+}
+.btn-apply{ background:var(--brand); color:#fff; }
+.btn-apply:hover{ background:var(--brand-2); }
+.btn-clear{ background:#fff; color:var(--ink); border-color:var(--line); }
+.btn-clear:hover{ background:#f7f9fb; }
+
+.filters-panel__inner::-webkit-scrollbar{ width:10px; }
+.filters-panel__inner::-webkit-scrollbar-track{ background:#f2f5f9; border-radius:8px; }
+.filters-panel__inner::-webkit-scrollbar-thumb{ background:#c8d3df; border-radius:8px; }
+.filters-panel__inner::-webkit-scrollbar-thumb:hover{ background:#b4c2d1; }
+
+/* ============ РЕЗУЛТАТИ ============ */
+.results-panel{ min-height:60vh; }
+.results-list{ display:block; }
+
+/* === КАРТА НА ОБЯВА — 1:1 като в профила === */
+.job-card{
+  display:flex; gap:18px; align-items:center; position:relative; cursor:pointer;
+  background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px;
+  margin-bottom:16px; transition: box-shadow .2s ease, transform .05s ease;
+}
+.job-card:hover{ box-shadow:0 10px 30px rgba(0,0,0,.08); }
+
+.job-card-img{
+  width:140px; height:140px; flex-shrink:0;
+  border-radius:12px; object-fit:cover; background:#f2f4f7;
+}
+.job-card-info{ flex:1; }
+.job-card-info h3{ margin:0 0 6px; font-size:20px; color:#002147; }
+.job-card-info p{ margin:4px 0; color:#334155; }
+
+.job-rating{ margin-bottom:6px; }
+
+/* Значка „Фирма“ + чипове */
+.badge-company{
+  display:inline-block; padding:3px 8px; margin-right:8px; font-size:12px;
+  background:var(--brand); color:#fff; border-radius:999px; vertical-align:middle;
+}
+.profession-chips{ margin:6px 0 8px; display:flex; flex-wrap:wrap; gap:6px; }
+.profession-chips .chip{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 8px;
+  background:var(--chip-bg); border:1px solid var(--chip-br); border-radius:999px; font-size:13px; color:var(--brand);
+}
+
+/* Десен „стек“ – идентичен като в профила (#jobList .job-side) */
+.results-list .job-card{ position:relative; }
+.results-list .job-side{
+  position:absolute; top:8px; right:8px;
+  display:flex; flex-direction:column; align-items:flex-end; gap:8px;
+}
+.results-list .job-side .favorite-icon{ position:static; }
+.results-list .job-side .edit-btn{
+  position:static; text-decoration:none;
+  padding:8px 12px; border:none; border-radius:10px;
+  color:#fff; background:#002147; cursor:pointer;
+}
+.results-list .job-side .edit-btn:hover{ background:#003665; }
+.results-list .job-side .delete-btn{
+  background:transparent; border:none; padding:0; cursor:pointer;
+}
+.results-list .job-side .trash-icon{
+  width:26px; height:26px; display:block; transition:transform .15s ease;
+}
+.results-list .job-side .trash-icon:hover{ transform:scale(1.08); }
+
+/* Любими (иконата) */
+.favorite-icon{ position:absolute; top:10px; right:10px; }
+.favorite-icon img{ width:26px; height:26px; transition: transform .15s ease; }
+.favorite-icon img:hover{ transform: scale(1.15); }
+
+/* Плащания – един под друг + ИКОНКИ (същите като в профила) */
+.payment-list{ display:flex; flex-direction:column; gap:4px; margin:6px 0; }
+.job-pay-item{ display:flex; align-items:center; gap:6px; color:#334155; }
+.job-pay-item i{ margin-right:6px; color:var(--brand); } /* <— иконките за цените */
+.job-pay-item strong{ color:#0f172a; }
+
+/* Иконка за местоположение – равнение с профила */
+.job-meta-item.location i{ margin-right:6px; color:var(--brand); }
+
+/* Помощни */
+.hidden{ display:none !important; }
